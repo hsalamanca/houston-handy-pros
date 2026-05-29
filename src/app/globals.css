@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #1B2A4A;
+  --orange: #F5A623;
+  --white: #FFFFFF;
+  --gray-light: #F8F9FA;
+  --gray-mid: #6B7280;
+  --gray-dark: #374151;
+  --background: #ffffff;
+  --foreground: #1B2A4A;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-navy: var(--navy);
+  --color-orange: var(--orange);
+  --color-gray-light: var(--gray-light);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', 'Plus Jakarta Sans', Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, #1B2A4A 0%, #2d3f6b 50%, #1B2A4A 100%);
+}
+
+.section-padding {
+  padding: 5rem 0;
+}
+
+.card-shadow {
+  box-shadow: 0 4px 24px rgba(27, 42, 74, 0.10);
+}
+
+.orange-glow {
+  box-shadow: 0 4px 20px rgba(245, 166, 35, 0.3);
+}
