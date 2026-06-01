@@ -49,6 +49,11 @@ export default function AdminDashboard() {
           <Link href="/admin/jobs" className="text-white/70 hover:text-white text-sm">Jobs</Link>
           <Link href="/admin/customers" className="text-white/70 hover:text-white text-sm">Customers</Link>
           <Link href="/" className="text-white/70 hover:text-white text-sm">View Site →</Link>
+          <form action="/api/admin-logout" method="POST">
+            <button type="submit" className="text-white/40 hover:text-white text-xs border border-white/20 px-3 py-1.5 rounded-lg hover:border-white/40 transition-colors">
+              Log Out
+            </button>
+          </form>
         </div>
       </div>
 
