@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
 
-// Coming soon gate — flip COMING_SOON_ACTIVE to 'false' in Vercel env vars to launch
+// Coming soon gate — defaults to ON.
+// To launch: set COMING_SOON_ACTIVE=false in Vercel env vars and redeploy.
+// Anything other than the string 'false' keeps it active (including unset).
 const COMING_SOON_ACTIVE = process.env.COMING_SOON_ACTIVE !== 'false';
 const PREVIEW_PASSWORD   = process.env.PREVIEW_PASSWORD  ?? 'hhp2026';
 
@@ -12,6 +14,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'hhpadmin2026';
 // Paths that always bypass the coming-soon gate (but NOT the admin gate)
 const COMING_SOON_BYPASS = [
   '/coming-soon',
+  '/admin-login',
   '/api/',
   '/_next/',
   '/favicon.ico',
@@ -48,7 +51,10 @@ export function middleware(req: NextRequest) {
   const { pathname, searchParams } = req.nextUrl;
 
   // ── 1. ADMIN / PORTAL GATE (always active, regardless of coming soon) ──────
-  const isAdminRoute = pathname.startsWith('/admin') || pathname.startsWith('/portal');
+  // '/admin-login' starts with '/admin' so explicitly exclude it
+  const isAdminRoute =
+    (pathname.startsWith('/admin') && !pathname.startsWith('/admin-login')) ||
+    pathname.startsWith('/portal');
 
   if (isAdminRoute) {
     const hasAdminCookie = req.cookies.get('hhp_admin')?.value === ADMIN_PASSWORD;
