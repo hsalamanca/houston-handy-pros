@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 export default function BrandMark({
@@ -9,23 +10,14 @@ export default function BrandMark({
 }) {
   return (
     <div className={cn('flex items-center gap-3', className)}>
-      <span
-        className={cn(
-          'flex h-10 w-10 items-center justify-center rounded-sm',
-          inverted ? 'bg-copper text-ink' : 'bg-ink text-cream'
-        )}
-        aria-hidden
-      >
-        <svg viewBox="0 0 32 32" className="h-6 w-6" fill="none">
-          <path
-            d="M6 15.2 16 7l10 8.2V26a1 1 0 0 1-1 1h-6.2v-7.2h-5.6V27H7a1 1 0 0 1-1-1V15.2Z"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinejoin="round"
-          />
-          <path d="M12.2 14.4h7.6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        </svg>
-      </span>
+      <Image
+        src={inverted ? '/images/logo-mark.jpg' : '/images/logo-icon.jpg'}
+        alt="Houston Handy Pros"
+        width={40}
+        height={40}
+        className="h-10 w-10 rounded-sm object-cover"
+        priority
+      />
       <span className="leading-none">
         <span
           className={cn(

@@ -33,7 +33,15 @@ export default function AboutPage() {
         eyebrow="Our story"
         title="Built in Houston. Built for Houston."
         subtitle={`Started in a Heights garage in ${BUSINESS.founded}. Still independent. Still the same rule: fix it right the first time, or come back and fix it for free.`}
-      />
+      >
+        <Image
+          src="/images/logo.jpg"
+          alt="Houston Handy Pros logo"
+          width={640}
+          height={360}
+          className="mx-auto h-auto w-full max-w-md rounded-sm"
+        />
+      </PageHero>
 
       <section className="section-pad bg-paper">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">

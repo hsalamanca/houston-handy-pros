@@ -53,6 +53,14 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   alternates: { canonical: 'https://houstonhandypros.com' },
   metadataBase: new URL('https://houstonhandypros.com'),
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+  },
 };
 
 const schema = {
