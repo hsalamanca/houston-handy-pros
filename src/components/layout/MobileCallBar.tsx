@@ -1,26 +1,24 @@
-'use client';
-
 import Link from 'next/link';
 import { Phone, CalendarCheck } from 'lucide-react';
 import { BUSINESS } from '@/lib/constants';
 
 export default function MobileCallBar() {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-gray-200 shadow-2xl">
+    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-paper md:hidden">
       <div className="grid grid-cols-2">
         <a
           href={BUSINESS.phoneHref}
-          className="flex items-center justify-center gap-2 bg-[#1B2A4A] text-white font-bold py-4 text-sm active:bg-[#2d3f6b]"
+          className="flex items-center justify-center gap-2 bg-ink py-3.5 text-sm font-semibold text-cream"
         >
-          <Phone className="w-4 h-4" />
+          <Phone className="h-4 w-4" />
           Call Now
         </a>
         <Link
           href="/book"
-          className="flex items-center justify-center gap-2 bg-[#F5A623] text-[#1B2A4A] font-bold py-4 text-sm active:bg-[#e8941a]"
+          className="flex items-center justify-center gap-2 bg-copper py-3.5 text-sm font-semibold text-ink"
         >
-          <CalendarCheck className="w-4 h-4" />
-          Book Online
+          <CalendarCheck className="h-4 w-4" />
+          Get Free Quote
         </Link>
       </div>
     </div>

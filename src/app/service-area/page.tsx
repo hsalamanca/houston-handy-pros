@@ -1,105 +1,102 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin, CheckCircle } from 'lucide-react';
-import { NEIGHBORHOODS } from '@/lib/constants';
+import { MapPin } from 'lucide-react';
+import { NEIGHBORHOODS, SUBURBS, BUSINESS } from '@/lib/constants';
+import { NEIGHBORHOOD_DATA } from '@/lib/neighborhoods';
+import PageHero from '@/components/ui/PageHero';
+import Button from '@/components/ui/Button';
+import CtaBand from '@/components/ui/CtaBand';
 
 export const metadata: Metadata = {
-  title: 'Handyman Service Area — Houston TX & Surrounding Areas',
+  title: 'Handyman Service Area — Houston TX & Surrounding Cities',
   description:
-    'Houston Handy Pros serves all of Houston and surrounding cities: Sugar Land, Katy, Pearland, The Woodlands, Spring, and more. 40-mile service radius.',
+    'Houston Handy Pros serves Houston and the metro: Sugar Land, Katy, Pearland, The Woodlands, Spring, Humble, and more. 40-mile radius. No travel fee.',
 };
-
-const suburbs = [
-  { name: 'Sugar Land', distance: '22 miles SW', fee: 'No travel fee' },
-  { name: 'Katy', distance: '30 miles W', fee: 'No travel fee' },
-  { name: 'Pearland', distance: '20 miles S', fee: 'No travel fee' },
-  { name: 'The Woodlands', distance: '28 miles N', fee: 'No travel fee' },
-  { name: 'Spring', distance: '23 miles N', fee: 'No travel fee' },
-  { name: 'Humble', distance: '20 miles NE', fee: 'No travel fee' },
-  { name: 'Pasadena', distance: '15 miles E', fee: 'No travel fee' },
-  { name: 'Friendswood', distance: '25 miles SE', fee: 'No travel fee' },
-  { name: 'Missouri City', distance: '18 miles SW', fee: 'No travel fee' },
-  { name: 'Stafford', distance: '22 miles SW', fee: 'No travel fee' },
-  { name: 'Cypress', distance: '25 miles NW', fee: 'No travel fee' },
-  { name: 'League City', distance: '30 miles SE', fee: 'No travel fee' },
-];
 
 export default function ServiceAreaPage() {
   return (
     <div>
-      <section className="bg-[#1B2A4A] py-20 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <span className="text-[#F5A623] font-bold uppercase tracking-wider text-sm">Coverage</span>
-          <h1 className="text-4xl sm:text-5xl font-black text-white mt-3 mb-5">
-            We Come to You
-          </h1>
-          <p className="text-white/70 text-lg">
-            Serving Houston and the entire metro area within a 40-mile radius. No hidden travel fees within our standard service area.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Coverage"
+        title="We come to you."
+        subtitle="Houston and the entire metro within 40 miles of downtown. No hidden travel fees inside the standard area."
+      />
 
-      {/* Map placeholder + neighborhoods */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
-          {/* Map */}
-          <div className="bg-[#1B2A4A] rounded-3xl h-64 sm:h-80 flex items-center justify-center mb-16 relative overflow-hidden">
-            <div className="text-center z-10">
-              <MapPin className="w-14 h-14 text-[#F5A623] mx-auto mb-3" />
-              <p className="text-white font-bold text-xl">Houston Metro Service Area</p>
-              <p className="text-white/60 text-sm mt-1">40-mile radius from downtown Houston</p>
+      <section className="section-pad bg-paper">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="relative mb-16 h-64 overflow-hidden rounded-sm sm:h-80">
+            <Image
+              src="/images/houston-neighborhood.jpg"
+              alt="Houston neighborhood we serve"
+              fill
+              className="object-cover"
+              sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-ink/45" />
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-cream">
+              <MapPin className="mb-3 h-10 w-10 text-gold" />
+              <p className="font-display text-3xl">Houston metro</p>
+              <p className="mt-1 text-sm text-cream/75">{BUSINESS.serviceRadius}</p>
             </div>
           </div>
 
-          {/* Houston neighborhoods */}
-          <div className="mb-16">
-            <h2 className="text-2xl font-black text-[#1B2A4A] mb-6 text-center">Houston Neighborhoods We Serve</h2>
-            <div className="flex flex-wrap justify-center gap-2">
-              {NEIGHBORHOODS.map((n) => (
-                <span key={n} className="inline-flex items-center gap-1.5 bg-[#F8F9FA] border border-gray-200 text-gray-700 text-sm px-4 py-2 rounded-full">
-                  <CheckCircle className="w-3.5 h-3.5 text-[#F5A623]" />
+          <h2 className="text-center font-display text-3xl text-ink">Neighborhoods</h2>
+          <div className="mt-6 flex flex-wrap justify-center gap-2">
+            {NEIGHBORHOODS.map((n) => {
+              const slug = NEIGHBORHOOD_DATA.find((d) => d.name === n)?.slug;
+              const cls =
+                'inline-flex items-center gap-1.5 border border-line bg-cream px-4 py-2 text-sm text-ink hover:border-copper';
+              return slug ? (
+                <Link key={n} href={`/handyman/${slug}`} className={cls}>
+                  <MapPin className="h-3.5 w-3.5 text-copper" />
+                  {n}
+                </Link>
+              ) : (
+                <span key={n} className={cls}>
+                  <MapPin className="h-3.5 w-3.5 text-copper" />
                   {n}
                 </span>
-              ))}
-            </div>
+              );
+            })}
           </div>
 
-          {/* Suburbs */}
-          <div>
-            <h2 className="text-2xl font-black text-[#1B2A4A] mb-6 text-center">Surrounding Cities</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {suburbs.map(({ name, distance, fee }) => (
-                <div key={name} className="flex items-center justify-between p-4 bg-[#F8F9FA] rounded-xl">
-                  <div className="flex items-center gap-3">
-                    <MapPin className="w-4 h-4 text-[#F5A623] shrink-0" />
-                    <div>
-                      <p className="font-semibold text-[#1B2A4A] text-sm">{name}</p>
-                      <p className="text-gray-500 text-xs">{distance}</p>
-                    </div>
+          <h2 className="mt-16 text-center font-display text-3xl text-ink">Surrounding cities</h2>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {SUBURBS.map(({ name, distance, fee }) => (
+              <div key={name} className="flex items-center justify-between border border-line bg-cream p-4">
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-4 w-4 text-copper" />
+                  <div>
+                    <p className="text-sm font-semibold text-ink">{name}</p>
+                    <p className="text-xs text-muted">{distance}</p>
                   </div>
-                  <span className="text-green-600 text-xs font-semibold">{fee}</span>
                 </div>
-              ))}
-            </div>
+                <span className="text-xs font-semibold text-forest">{fee}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Outside area CTA */}
-      <section className="py-16 px-4 bg-[#F8F9FA]">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl font-black text-[#1B2A4A] mb-3">Don&apos;t See Your Area?</h2>
-          <p className="text-gray-600 mb-6">We may still be able to help. Contact us and we&apos;ll let you know — we occasionally serve areas just outside our standard radius for larger jobs.</p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/contact" className="bg-[#1B2A4A] text-white font-bold px-8 py-3 rounded-xl hover:bg-[#2d3f6b] transition-colors">
-              Contact Us
-            </Link>
-            <a href="tel:+17135550190" className="bg-white border border-gray-200 text-[#1B2A4A] font-bold px-8 py-3 rounded-xl hover:bg-gray-50 transition-colors">
-              Call (713) 555-0190
-            </a>
+      <section className="bg-cream py-16">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <h2 className="font-display text-2xl text-ink">Don’t see your area?</h2>
+          <p className="mt-3 text-muted">
+            We sometimes serve just outside the radius for larger jobs. Tell us the address and we’ll say yes or no.
+          </p>
+          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+            <Button href="/contact" variant="secondary">
+              Contact us
+            </Button>
+            <Button href={BUSINESS.phoneHref} variant="outline">
+              Call {BUSINESS.phone}
+            </Button>
           </div>
         </div>
       </section>
+
+      <CtaBand />
     </div>
   );
 }

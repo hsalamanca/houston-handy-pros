@@ -32,7 +32,7 @@ export default function TermsPage() {
         </section>
         <section>
           <h2 className="text-xl font-black text-[#1B2A4A] mb-3">Contact</h2>
-          <p>Questions? Call <a href="tel:+17135550190" className="text-[#F5A623] hover:underline">(713) 555-0190</a> or email <a href="mailto:hello@houstonhandypros.com" className="text-[#F5A623] hover:underline">hello@houstonhandypros.com</a>.</p>
+          <p>Questions? Call <a href="tel:+18322150668" className="text-[#F5A623] hover:underline">(832) 215-0668</a> or email <a href="mailto:hello@houstonhandypros.com" className="text-[#F5A623] hover:underline">hello@houstonhandypros.com</a>.</p>
         </section>
       </div>
     </div>

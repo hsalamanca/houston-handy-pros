@@ -1,105 +1,75 @@
 import Link from 'next/link';
-import { Phone, Mail, MapPin, Share2, Camera, Star } from 'lucide-react';
-import { BUSINESS } from '@/lib/constants';
-
-const serviceLinks = [
-  { href: '/services/carpentry', label: 'Carpentry & Woodwork' },
-  { href: '/services/plumbing', label: 'Plumbing Repairs' },
-  { href: '/services/electrical', label: 'Electrical' },
-  { href: '/services/drywall', label: 'Drywall & Painting' },
-  { href: '/services/flooring', label: 'Flooring' },
-  { href: '/services/pressure-washing', label: 'Pressure Washing' },
-  { href: '/services/fence', label: 'Fence & Gate Repair' },
-  { href: '/services/commercial', label: 'Commercial Services' },
-];
+import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { BUSINESS, SERVICES } from '@/lib/constants';
+import BrandMark from '@/components/ui/BrandMark';
 
 const companyLinks = [
   { href: '/about', label: 'About Us' },
   { href: '/portfolio', label: 'Project Gallery' },
-  { href: '/reviews', label: 'Reviews' },
   { href: '/pricing', label: 'Pricing & Plans' },
   { href: '/service-area', label: 'Service Area' },
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' },
+  { href: '/emergency', label: 'Same-Day / Emergency' },
+  { href: '/book', label: 'Book Online' },
 ];
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1B2A4A] text-white">
-      {/* CTA Banner */}
-      <div className="bg-[#F5A623]">
-        <div className="max-w-7xl mx-auto px-4 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+    <footer className="bg-ink text-cream">
+      <div className="bg-copper">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-4 py-10 text-center md:flex-row md:text-left sm:px-6">
           <div>
-            <h3 className="text-[#1B2A4A] text-2xl font-black">Ready to Cross It Off Your List?</h3>
-            <p className="text-[#1B2A4A]/80 mt-1">Book online in 60 seconds. No hassle, no surprises.</p>
+            <h3 className="font-display text-2xl font-medium text-ink md:text-3xl">
+              Need it done right the first time?
+            </h3>
+            <p className="mt-1 text-ink/80">Book in a minute. Or call — a person answers.</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <Link
               href="/book"
-              className="bg-[#1B2A4A] text-white font-bold px-8 py-3 rounded-lg hover:bg-[#2d3f6b] transition-colors"
+              className="rounded-sm bg-ink px-7 py-3 text-center text-sm font-semibold text-cream hover:bg-navy"
             >
-              Get Free Estimate
+              Get Free Quote
             </Link>
             <a
               href={BUSINESS.phoneHref}
-              className="bg-white text-[#1B2A4A] font-bold px-8 py-3 rounded-lg hover:bg-gray-100 transition-colors"
+              className="rounded-sm border border-ink/20 bg-paper px-7 py-3 text-center text-sm font-semibold text-ink hover:bg-cream"
             >
-              Call Now
+              Call {BUSINESS.phone}
             </a>
           </div>
         </div>
       </div>
 
-      {/* Main footer */}
-      <div className="max-w-7xl mx-auto px-4 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-        {/* Brand column */}
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-9 h-9 rounded-lg bg-[#F5A623] flex items-center justify-center">
-              <span className="text-[#1B2A4A] font-black text-lg">H</span>
-            </div>
-            <span className="text-white font-bold text-lg">Houston Handy Pros</span>
-          </div>
-          <p className="text-white/70 text-sm leading-relaxed mb-5">
-            Houston&apos;s trusted handyman service since {BUSINESS.founded}. Licensed, bonded, and insured. We fix it right the first time.
+          <BrandMark inverted />
+          <p className="mt-5 text-sm leading-relaxed text-cream/65">
+            Independent Houston handyman company since {BUSINESS.founded}. Bonded, insured, and guaranteed. We fix
+            the list — and we stand behind the work.
           </p>
-          <div className="flex items-center gap-1 mb-4">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-4 h-4 fill-[#F5A623] text-[#F5A623]" />
-            ))}
-            <span className="text-white/70 text-sm ml-2">{BUSINESS.rating} ({BUSINESS.reviewCount} reviews)</span>
-          </div>
-          <div className="flex gap-3">
-            <a href="#" className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-[#F5A623] transition-colors">
-              <Share2 className="w-4 h-4" />
-            </a>
-            <a href="#" className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center hover:bg-[#F5A623] transition-colors">
-              <Camera className="w-4 h-4" />
-            </a>
-          </div>
         </div>
 
-        {/* Services */}
         <div>
-          <h4 className="text-[#F5A623] font-bold uppercase tracking-wider text-xs mb-4">Services</h4>
+          <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-gold">Services</h4>
           <ul className="space-y-2">
-            {serviceLinks.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className="text-white/70 hover:text-white text-sm transition-colors">
-                  {link.label}
+            {SERVICES.slice(0, 8).map((s) => (
+              <li key={s.id}>
+                <Link href={`/services/${s.id}`} className="text-sm text-cream/65 hover:text-cream">
+                  {s.title}
                 </Link>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Company */}
         <div>
-          <h4 className="text-[#F5A623] font-bold uppercase tracking-wider text-xs mb-4">Company</h4>
+          <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-gold">Company</h4>
           <ul className="space-y-2">
             {companyLinks.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-white/70 hover:text-white text-sm transition-colors">
+                <Link href={link.href} className="text-sm text-cream/65 hover:text-cream">
                   {link.label}
                 </Link>
               </li>
@@ -107,47 +77,54 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Contact */}
         <div>
-          <h4 className="text-[#F5A623] font-bold uppercase tracking-wider text-xs mb-4">Contact</h4>
-          <ul className="space-y-3">
+          <h4 className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-gold">Contact</h4>
+          <ul className="space-y-3 text-sm text-cream/70">
             <li>
-              <a href={BUSINESS.phoneHref} className="flex items-center gap-2 text-white/70 hover:text-white text-sm transition-colors">
-                <Phone className="w-4 h-4 text-[#F5A623] shrink-0" />
+              <a href={BUSINESS.phoneHref} className="flex items-center gap-2 hover:text-cream">
+                <Phone className="h-4 w-4 text-gold" />
                 {BUSINESS.phone}
               </a>
             </li>
             <li>
-              <a href={`mailto:${BUSINESS.email}`} className="flex items-center gap-2 text-white/70 hover:text-white text-sm transition-colors">
-                <Mail className="w-4 h-4 text-[#F5A623] shrink-0" />
+              <a href={`mailto:${BUSINESS.email}`} className="flex items-center gap-2 hover:text-cream">
+                <Mail className="h-4 w-4 text-gold" />
                 {BUSINESS.email}
               </a>
             </li>
-            <li className="flex items-start gap-2 text-white/70 text-sm">
-              <MapPin className="w-4 h-4 text-[#F5A623] shrink-0 mt-0.5" />
-              <span>{BUSINESS.address}</span>
+            <li className="flex items-start gap-2">
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+              {BUSINESS.address}
+            </li>
+            <li className="flex items-start gap-2">
+              <Clock className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+              <span>
+                {BUSINESS.hours}
+                <br />
+                {BUSINESS.hoursSunday}
+              </span>
             </li>
           </ul>
-          <div className="mt-6 p-4 bg-white/5 rounded-xl">
-            <p className="text-[#F5A623] font-bold text-sm">Hours</p>
-            <p className="text-white/70 text-sm mt-1">{BUSINESS.hours}</p>
-            <p className="text-white/50 text-xs mt-1">Sunday: Closed</p>
-          </div>
-          <div className="mt-4 p-3 bg-white/5 rounded-xl">
-            <p className="text-white/50 text-xs">License: {BUSINESS.license}</p>
-            <p className="text-white/50 text-xs mt-0.5">Bonded & Insured — $1M Coverage</p>
+          <div className="mt-5 rounded-sm border border-white/10 bg-white/5 p-4 text-xs text-cream/55">
+            <p>Bonded & insured — {BUSINESS.insurance}</p>
+            <p className="mt-1">{BUSINESS.guarantee}</p>
           </div>
         </div>
       </div>
 
-      {/* Bottom bar */}
       <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-white/50">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-cream/45 sm:flex-row sm:px-6">
           <p>© {new Date().getFullYear()} Houston Handy Pros. All rights reserved.</p>
           <div className="flex gap-4">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link href="/sitemap.xml" className="hover:text-white transition-colors">Sitemap</Link>
+            <Link href="/privacy" className="hover:text-cream">
+              Privacy
+            </Link>
+            <Link href="/terms" className="hover:text-cream">
+              Terms
+            </Link>
+            <Link href="/sitemap.xml" className="hover:text-cream">
+              Sitemap
+            </Link>
           </div>
         </div>
       </div>

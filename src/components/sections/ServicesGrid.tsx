@@ -1,65 +1,61 @@
+import Image from 'next/image';
 import Link from 'next/link';
-import {
-  Hammer, Wrench, Zap, Paintbrush, Grid3X3, Droplets,
-  Shield, Package, Monitor, Calendar, Building2, ArrowRight
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { SERVICES } from '@/lib/constants';
+import SectionHeading from '@/components/ui/SectionHeading';
+import Button from '@/components/ui/Button';
 
-const iconMap: Record<string, React.ElementType> = {
-  Hammer, Wrench, Zap, PaintBucket: Paintbrush, Grid3X3, Droplets,
-  Shield, Package, Monitor, Calendar, Building2,
-};
+export default function ServicesGrid({ limit }: { limit?: number }) {
+  const list = limit ? SERVICES.slice(0, limit) : SERVICES;
 
-export default function ServicesGrid() {
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-14">
-          <span className="text-[#F5A623] font-bold uppercase tracking-wider text-sm">What We Fix</span>
-          <h2 className="text-3xl sm:text-4xl font-black text-[#1B2A4A] mt-2 mb-4">
-            One Call Handles It All
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            From a single dripping faucet to a full home refresh before you list — we handle the jobs you don&apos;t have time for, the tools to do, or the patience to attempt.
-          </p>
+    <section className="section-pad bg-paper">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <SectionHeading
+          eyebrow="What we handle"
+          title="One crew. The whole list."
+          subtitle="Houston humidity, clay soil, and storm season create a specific set of jobs. We do those jobs — and we do them once."
+        />
+
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {list.map((service) => (
+            <Link
+              key={service.id}
+              href={`/services/${service.id}`}
+              className="group overflow-hidden rounded-sm border border-line bg-cream transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div className="relative h-48 overflow-hidden">
+                <Image
+                  src={service.image}
+                  alt={service.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+                <span className="absolute bottom-3 left-3 rounded-sm bg-ink/80 px-2.5 py-1 text-xs font-semibold text-gold">
+                  {service.priceRange}
+                </span>
+              </div>
+              <div className="p-5">
+                <h3 className="font-display text-xl text-ink">{service.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{service.description}</p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-copper">
+                  View service
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </div>
+            </Link>
+          ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {SERVICES.map((service) => {
-            const Icon = iconMap[service.icon] || Hammer;
-            return (
-              <Link
-                key={service.id}
-                href={`/services/${service.id}`}
-                className="group bg-[#F8F9FA] rounded-2xl p-6 hover:bg-[#1B2A4A] transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-              >
-                <div className="w-12 h-12 rounded-xl bg-[#1B2A4A] group-hover:bg-[#F5A623] flex items-center justify-center mb-4 transition-colors duration-300">
-                  <Icon className="w-6 h-6 text-[#F5A623] group-hover:text-[#1B2A4A] transition-colors duration-300" />
-                </div>
-                <h3 className="font-bold text-[#1B2A4A] group-hover:text-white text-base mb-2 transition-colors duration-300">
-                  {service.title}
-                </h3>
-                <p className="text-gray-500 group-hover:text-white/70 text-sm leading-relaxed mb-3 transition-colors duration-300">
-                  {service.description}
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-[#F5A623] font-bold text-sm">{service.priceRange}</span>
-                  <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-300" />
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-
-        <div className="text-center mt-10">
-          <Link
-            href="/services"
-            className="inline-flex items-center gap-2 bg-[#1B2A4A] text-white font-bold px-8 py-4 rounded-xl hover:bg-[#2d3f6b] transition-colors"
-          >
-            View All Services
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
+        {limit && (
+          <div className="mt-10 text-center">
+            <Button href="/services" variant="secondary">
+              View all services
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

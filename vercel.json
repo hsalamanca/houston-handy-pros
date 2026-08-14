@@ -25,6 +25,7 @@
     { "source": "/booking", "destination": "/book", "permanent": true },
     { "source": "/estimate", "destination": "/book", "permanent": true },
     { "source": "/services/tv-mount", "destination": "/services/tv-mounting", "permanent": true },
-    { "source": "/handyman-houston", "destination": "/", "permanent": true }
+    { "source": "/handyman-houston", "destination": "/", "permanent": true },
+    { "source": "/coming-soon", "destination": "/", "permanent": true }
   ]
 }

@@ -2,15 +2,17 @@ import type { Metadata } from 'next';
 import Hero from '@/components/sections/Hero';
 import TrustBar from '@/components/sections/TrustBar';
 import ServicesGrid from '@/components/sections/ServicesGrid';
+import WhyChooseUs from '@/components/sections/WhyChooseUs';
 import HowItWorks from '@/components/sections/HowItWorks';
-import ReviewsCarousel from '@/components/sections/ReviewsCarousel';
+import GalleryPreview from '@/components/sections/GalleryPreview';
 import ServiceAreaSection from '@/components/sections/ServiceAreaSection';
 import FAQ from '@/components/sections/FAQ';
+import CtaBand from '@/components/ui/CtaBand';
 
 export const metadata: Metadata = {
-  title: 'Houston Handy Pros | Licensed Handyman Services in Houston, TX',
+  title: 'Houston Handy Pros | Handyman Services in Houston, TX',
   description:
-    "Houston's most trusted handyman service since 2015. Licensed, bonded & insured. Plumbing, carpentry, electrical, drywall, TV mounting & more. Book online today.",
+    'Bonded & insured handyman serving Houston, Katy, Sugar Land, Pearland, and The Woodlands. Same-week booking. 1-year guarantee. Get a free quote.',
 };
 
 export default function HomePage() {
@@ -18,11 +20,13 @@ export default function HomePage() {
     <>
       <Hero />
       <TrustBar />
-      <ServicesGrid />
+      <ServicesGrid limit={6} />
+      <WhyChooseUs />
       <HowItWorks />
-      <ReviewsCarousel />
+      <GalleryPreview />
       <ServiceAreaSection />
       <FAQ />
+      <CtaBand title="15% off your first job." subtitle="New Houston customers. Book this month. Mention the launch offer or use the form." />
     </>
   );
 }

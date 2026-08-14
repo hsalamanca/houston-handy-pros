@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { CheckCircle, ChevronRight, Phone, Shield, Clock } from 'lucide-react';
 import { SERVICES, BUSINESS } from '@/lib/constants';
+import Button from '@/components/ui/Button';
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
@@ -65,28 +66,27 @@ export default function BookPage() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center px-4">
-        <div className="bg-white rounded-3xl p-10 sm:p-14 max-w-lg w-full text-center shadow-xl">
-          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="w-10 h-10 text-green-600" />
-          </div>
-          <h1 className="text-3xl font-black text-[#1B2A4A] mb-3">You&apos;re Booked!</h1>
-          <p className="text-gray-600 mb-2">
-            Thanks, <strong>{data.name}</strong>! We&apos;ve received your request for <strong>{data.service}</strong>.
+      <div className="flex min-h-[70vh] items-center justify-center bg-paper px-4 py-20">
+        <div className="w-full max-w-lg border border-line bg-cream p-10 text-center">
+          <CheckCircle className="mx-auto mb-4 h-12 w-12 text-forest" />
+          <h1 className="font-display text-3xl text-ink">You’re booked.</h1>
+          <p className="mt-3 text-muted">
+            Thanks, <strong className="text-ink">{data.name}</strong>. We received your request for{' '}
+            <strong className="text-ink">{data.service}</strong>.
           </p>
-          <p className="text-gray-600 mb-6">
-            You&apos;ll get a confirmation email at <strong>{data.email}</strong> and an SMS at <strong>{data.phone}</strong> within 30 minutes.
+          <p className="mt-2 text-sm text-muted">
+            Confirmation goes to {data.email} and {data.phone} within 30 minutes.
           </p>
-          <div className="bg-[#F8F9FA] rounded-xl p-4 text-left text-sm text-gray-700 mb-6 space-y-1">
+          <div className="mt-6 space-y-1 border border-line bg-paper p-4 text-left text-sm">
             <p><span className="font-semibold">Service:</span> {data.service}</p>
-            <p><span className="font-semibold">Date/Time:</span> {data.date} at {data.time}</p>
-            <p><span className="font-semibold">Address:</span> {data.address}</p>
+            <p><span className="font-semibold">When:</span> {data.date} at {data.time}</p>
+            <p><span className="font-semibold">Where:</span> {data.address}</p>
           </div>
           <a
             href={BUSINESS.phoneHref}
-            className="flex items-center justify-center gap-2 bg-[#1B2A4A] text-white font-bold py-3 rounded-xl hover:bg-[#2d3f6b] transition-colors"
+            className="mt-6 inline-flex items-center gap-2 font-semibold text-copper"
           >
-            <Phone className="w-4 h-4" />
+            <Phone className="h-4 w-4" />
             Questions? Call {BUSINESS.phone}
           </a>
         </div>
@@ -94,235 +94,203 @@ export default function BookPage() {
     );
   }
 
-  const steps = ['Service', 'Details', 'Schedule', 'Address', 'Your Info'];
+  const steps = ['Service', 'Details', 'Schedule', 'Address', 'Your info'];
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA]">
-      {/* Header */}
-      <div className="bg-[#1B2A4A] py-12 px-4 text-center">
-        <h1 className="text-3xl sm:text-4xl font-black text-white mb-2">Book Your Handyman</h1>
-        <p className="text-white/60">Takes 60 seconds. No commitment required.</p>
+    <div className="min-h-screen bg-paper">
+      <div className="bg-ink px-4 py-14 text-center">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">Book online</p>
+        <h1 className="mt-3 font-display text-4xl text-cream">Book your handyman</h1>
+        <p className="mt-2 text-cream/65">About a minute. No commitment until we confirm.</p>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 py-10">
-        {/* Progress */}
-        <div className="flex items-center mb-10">
+      <div className="mx-auto max-w-3xl px-4 py-10">
+        <div className="mb-10 flex items-center">
           {steps.map((s, i) => (
-            <div key={s} className="flex items-center flex-1 last:flex-none">
+            <div key={s} className="flex flex-1 items-center last:flex-none">
               <div className="flex flex-col items-center gap-1">
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
-                    i + 1 < step ? 'bg-green-500 text-white' :
-                    i + 1 === step ? 'bg-[#F5A623] text-[#1B2A4A]' :
-                    'bg-gray-200 text-gray-400'
+                  className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${
+                    i + 1 < step
+                      ? 'bg-forest text-cream'
+                      : i + 1 === step
+                        ? 'bg-copper text-ink'
+                        : 'bg-sand text-muted'
                   }`}
                 >
-                  {i + 1 < step ? <CheckCircle className="w-4 h-4" /> : i + 1}
+                  {i + 1 < step ? <CheckCircle className="h-4 w-4" /> : i + 1}
                 </div>
-                <span className={`text-xs hidden sm:block ${i + 1 === step ? 'text-[#1B2A4A] font-semibold' : 'text-gray-400'}`}>{s}</span>
+                <span className={`hidden text-[11px] sm:block ${i + 1 === step ? 'font-semibold text-ink' : 'text-muted'}`}>
+                  {s}
+                </span>
               </div>
               {i < steps.length - 1 && (
-                <div className={`flex-1 h-0.5 mx-2 ${i + 1 < step ? 'bg-green-500' : 'bg-gray-200'}`} />
+                <div className={`mx-2 h-px flex-1 ${i + 1 < step ? 'bg-forest' : 'bg-line'}`} />
               )}
             </div>
           ))}
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm">
-            {/* Step 1: Service */}
+          <div className="border border-line bg-cream p-6 sm:p-8">
             {step === 1 && (
               <div>
-                <h2 className="text-xl font-black text-[#1B2A4A] mb-6">What do you need help with?</h2>
-                <div className="grid sm:grid-cols-2 gap-3">
+                <h2 className="font-display text-2xl text-ink">What do you need help with?</h2>
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
                   {SERVICES.map((s) => (
                     <button
                       key={s.id}
                       type="button"
                       onClick={() => update('service', s.title)}
-                      className={`text-left p-4 rounded-xl border-2 transition-colors ${
+                      className={`border p-4 text-left transition-colors ${
                         data.service === s.title
-                          ? 'border-[#F5A623] bg-[#F5A623]/10'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-copper bg-paper'
+                          : 'border-line bg-paper hover:border-ink/30'
                       }`}
                     >
-                      <p className="font-semibold text-[#1B2A4A] text-sm">{s.title}</p>
-                      <p className="text-gray-500 text-xs mt-0.5">{s.priceRange}</p>
+                      <p className="text-sm font-semibold text-ink">{s.title}</p>
+                      <p className="mt-0.5 text-xs text-muted">{s.priceRange}</p>
                     </button>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Step 2: Description */}
             {step === 2 && (
               <div>
-                <h2 className="text-xl font-black text-[#1B2A4A] mb-2">Describe the job</h2>
-                <p className="text-gray-500 text-sm mb-6">The more detail, the more accurate your quote will be.</p>
+                <h2 className="font-display text-2xl text-ink">Describe the job</h2>
+                <p className="mt-2 text-sm text-muted">The more detail, the more accurate the quote.</p>
                 <textarea
-                  className="w-full border border-gray-200 rounded-xl p-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#F5A623] resize-none"
+                  className="mt-6 w-full resize-none rounded-sm border border-line bg-paper p-4 text-sm outline-none ring-copper/40 focus:ring-2"
                   rows={6}
-                  placeholder="E.g. 'Faucet under the kitchen sink has been dripping for a week. I think it needs a new washer. While here, can you also check the garbage disposal?'"
+                  placeholder="e.g. Kitchen faucet has been dripping for a week. While you’re here, can you look at the disposal?"
                   value={data.description}
                   onChange={(e) => update('description', e.target.value)}
                 />
-                <p className="text-gray-400 text-xs mt-2">Minimum 10 characters</p>
               </div>
             )}
 
-            {/* Step 3: Schedule */}
             {step === 3 && (
               <div>
-                <h2 className="text-xl font-black text-[#1B2A4A] mb-6">Pick a date & time</h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Preferred Date</label>
-                    <input
-                      type="date"
-                      className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5A623]"
-                      min={new Date().toISOString().split('T')[0]}
-                      value={data.date}
-                      onChange={(e) => update('date', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Preferred Time</label>
-                    <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                      {times.map((t) => (
-                        <button
-                          key={t}
-                          type="button"
-                          onClick={() => update('time', t)}
-                          className={`py-2 px-2 rounded-lg border text-xs font-medium transition-colors ${
-                            data.time === t
-                              ? 'border-[#F5A623] bg-[#F5A623]/10 text-[#1B2A4A]'
-                              : 'border-gray-200 text-gray-600 hover:border-gray-300'
-                          }`}
-                        >
-                          {t}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                <h2 className="font-display text-2xl text-ink">Pick a date & time</h2>
+                <label className="mt-6 block text-sm font-semibold text-ink">Preferred date</label>
+                <input
+                  type="date"
+                  className="mt-2 w-full rounded-sm border border-line bg-paper p-3 text-sm outline-none ring-copper/40 focus:ring-2"
+                  min={new Date().toISOString().split('T')[0]}
+                  value={data.date}
+                  onChange={(e) => update('date', e.target.value)}
+                />
+                <label className="mt-5 block text-sm font-semibold text-ink">Preferred time</label>
+                <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5">
+                  {times.map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => update('time', t)}
+                      className={`rounded-sm border px-2 py-2 text-xs font-medium ${
+                        data.time === t ? 'border-copper bg-paper text-ink' : 'border-line text-muted'
+                      }`}
+                    >
+                      {t}
+                    </button>
+                  ))}
                 </div>
-                <div className="flex items-center gap-2 mt-6 p-3 bg-blue-50 rounded-xl text-blue-700 text-sm">
-                  <Clock className="w-4 h-4 shrink-0" />
-                  We&apos;ll confirm within 2 hours. Can&apos;t make the requested time? We&apos;ll find an alternative.
-                </div>
+                <p className="mt-4 flex items-center gap-2 text-sm text-muted">
+                  <Clock className="h-4 w-4 text-copper" />
+                  We confirm within 2 hours. If that window is taken, we’ll offer the next one.
+                </p>
               </div>
             )}
 
-            {/* Step 4: Address */}
             {step === 4 && (
               <div>
-                <h2 className="text-xl font-black text-[#1B2A4A] mb-2">Where&apos;s the job?</h2>
-                <p className="text-gray-500 text-sm mb-6">We serve a 40-mile radius from downtown Houston.</p>
+                <h2 className="font-display text-2xl text-ink">Where’s the job?</h2>
+                <p className="mt-2 text-sm text-muted">We serve a 40-mile radius from downtown Houston.</p>
                 <input
                   type="text"
-                  className="w-full border border-gray-200 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5A623]"
+                  className="mt-6 w-full rounded-sm border border-line bg-paper p-4 text-sm outline-none ring-copper/40 focus:ring-2"
                   placeholder="123 Main St, Houston, TX 77002"
                   value={data.address}
                   onChange={(e) => update('address', e.target.value)}
                 />
-                <div className="flex items-center gap-2 mt-4 p-3 bg-green-50 rounded-xl text-green-700 text-sm">
-                  <Shield className="w-4 h-4 shrink-0" />
-                  Your address is secure and only shared with your assigned technician.
-                </div>
+                <p className="mt-4 flex items-center gap-2 text-sm text-muted">
+                  <Shield className="h-4 w-4 text-copper" />
+                  Shared only with your assigned technician.
+                </p>
               </div>
             )}
 
-            {/* Step 5: Contact info */}
             {step === 5 && (
               <div>
-                <h2 className="text-xl font-black text-[#1B2A4A] mb-6">Almost done — your contact info</h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Full Name</label>
-                    <input
-                      type="text"
-                      className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5A623]"
-                      placeholder="Jane Smith"
-                      value={data.name}
-                      onChange={(e) => update('name', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email Address</label>
-                    <input
-                      type="email"
-                      className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5A623]"
-                      placeholder="jane@example.com"
-                      value={data.email}
-                      onChange={(e) => update('email', e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Phone Number</label>
-                    <input
-                      type="tel"
-                      className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5A623]"
-                      placeholder="(713) 555-0000"
-                      value={data.phone}
-                      onChange={(e) => update('phone', e.target.value)}
-                    />
-                  </div>
+                <h2 className="font-display text-2xl text-ink">Almost done</h2>
+                <div className="mt-6 space-y-4">
+                  {[
+                    { label: 'Full name', key: 'name' as const, type: 'text', ph: 'Jane Smith' },
+                    { label: 'Email', key: 'email' as const, type: 'email', ph: 'jane@example.com' },
+                    { label: 'Phone', key: 'phone' as const, type: 'tel', ph: '(713) 555-0000' },
+                  ].map(({ label, key, type, ph }) => (
+                    <div key={key}>
+                      <label className="mb-1.5 block text-sm font-semibold text-ink">{label}</label>
+                      <input
+                        type={type}
+                        className="w-full rounded-sm border border-line bg-paper p-3 text-sm outline-none ring-copper/40 focus:ring-2"
+                        placeholder={ph}
+                        value={data[key]}
+                        onChange={(e) => update(key, e.target.value)}
+                      />
+                    </div>
+                  ))}
                 </div>
-                <p className="text-gray-400 text-xs mt-4">
-                  By submitting, you agree to be contacted about your booking. We don&apos;t sell your data.
+                <p className="mt-4 text-xs text-muted">
+                  By submitting, you agree to be contacted about this booking. We don’t sell your data.
                 </p>
               </div>
             )}
           </div>
 
-          {/* Navigation */}
-          <div className="flex justify-between mt-6">
+          <div className="mt-6 flex justify-between">
             {step > 1 ? (
               <button
                 type="button"
                 onClick={() => setStep((s) => (s - 1) as Step)}
-                className="px-6 py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold hover:bg-gray-50 transition-colors"
+                className="rounded-sm border border-line px-6 py-3 text-sm font-semibold text-muted"
               >
                 Back
               </button>
-            ) : <div />}
+            ) : (
+              <div />
+            )}
 
             {step < 5 ? (
-              <button
+              <Button
                 type="button"
-                onClick={() => setStep((s) => (s + 1) as Step)}
                 disabled={!canNext[step]}
-                className="flex items-center gap-2 bg-[#F5A623] text-[#1B2A4A] font-black px-8 py-3 rounded-xl hover:bg-[#e8941a] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                onClick={() => setStep((s) => (s + 1) as Step)}
               >
-                Continue <ChevronRight className="w-4 h-4" />
-              </button>
+                Continue <ChevronRight className="h-4 w-4" />
+              </Button>
             ) : (
-              <button
-                type="submit"
-                disabled={!canNext[5] || submitting}
-                className="flex items-center gap-2 bg-[#F5A623] text-[#1B2A4A] font-black px-8 py-3 rounded-xl hover:bg-[#e8941a] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                {submitting ? 'Submitting…' : <>Confirm Booking <CheckCircle className="w-4 h-4" /></>}
-              </button>
+              <Button type="submit" disabled={!canNext[5] || submitting}>
+                {submitting ? 'Submitting…' : 'Confirm booking'}
+              </Button>
             )}
           </div>
         </form>
 
         {submitError && (
-          <div className="mt-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
-            {submitError}
-          </div>
+          <div className="mt-4 border border-red-200 bg-red-50 p-4 text-sm text-red-700">{submitError}</div>
         )}
 
-        {/* Trust signals */}
-        <div className="grid grid-cols-3 gap-4 mt-8 text-center">
+        <div className="mt-10 grid grid-cols-3 gap-4 text-center">
           {[
-            { icon: Shield, text: 'Licensed & Insured' },
-            { icon: CheckCircle, text: '1-Year Guarantee' },
-            { icon: Clock, text: 'Fast Response' },
+            { icon: Shield, text: 'Bonded & insured' },
+            { icon: CheckCircle, text: '1-year guarantee' },
+            { icon: Clock, text: 'Fast response' },
           ].map(({ icon: Icon, text }) => (
             <div key={text} className="flex flex-col items-center gap-1.5">
-              <Icon className="w-5 h-5 text-[#F5A623]" />
-              <span className="text-gray-600 text-xs font-medium">{text}</span>
+              <Icon className="h-5 w-5 text-copper" />
+              <span className="text-xs font-medium text-muted">{text}</span>
             </div>
           ))}
         </div>

@@ -1,28 +1,29 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import {
-  Hammer, Wrench, Zap, Paintbrush, Grid3X3, Droplets,
-  Shield, Package, Monitor, Calendar, Building2, CheckCircle, Phone, Star
-} from 'lucide-react';
+import { CheckCircle, Phone } from 'lucide-react';
 import { SERVICES, BUSINESS } from '@/lib/constants';
-
-const iconMap: Record<string, React.ElementType> = {
-  Hammer, Wrench, Zap, PaintBucket: Paintbrush, Grid3X3, Droplets,
-  Shield, Package, Monitor, Calendar, Building2,
-};
+import Button from '@/components/ui/Button';
+import CtaBand from '@/components/ui/CtaBand';
+import QuoteForm from '@/components/forms/QuoteForm';
 
 export async function generateStaticParams() {
   return SERVICES.map((s) => ({ slug: s.id }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const service = SERVICES.find((s) => s.id === slug);
   if (!service) return {};
   return {
     title: `${service.title} in Houston, TX`,
-    description: `Professional ${service.title.toLowerCase()} in Houston. ${service.description} Licensed & insured. Starting at ${service.priceRange}.`,
+    description: `Professional ${service.title.toLowerCase()} in Houston. ${service.description} Insured. Starting at ${service.priceRange}.`,
+    alternates: { canonical: `https://houstonhandypros.com/services/${service.id}` },
   };
 }
 
@@ -31,112 +32,141 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
   const service = SERVICES.find((s) => s.id === slug);
   if (!service) notFound();
 
-  const Icon = iconMap[service.icon] || Hammer;
+  const related = SERVICES.filter((s) => s.id !== service.id).slice(0, 3);
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `${service.title} in Houston, TX`,
+    description: service.longDescription,
+    provider: {
+      '@type': 'HomeAndConstructionBusiness',
+      name: BUSINESS.name,
+      telephone: '+18322150668',
+    },
+    areaServed: { '@type': 'City', name: 'Houston', addressRegion: 'TX' },
+    offers: {
+      '@type': 'Offer',
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        priceCurrency: 'USD',
+        description: service.priceRange,
+      },
+    },
+  };
 
   return (
     <div>
-      {/* Hero */}
-      <section className="bg-[#1B2A4A] py-20 px-4">
-        <div className="max-w-5xl mx-auto grid sm:grid-cols-2 gap-8 items-center">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+
+      <section className="relative min-h-[52vh] overflow-hidden bg-ink">
+        <Image
+          src={service.image}
+          alt={service.title}
+          fill
+          priority
+          className="object-cover opacity-35"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/40" />
+        <div className="relative mx-auto grid max-w-7xl items-end gap-8 px-4 py-20 sm:px-6 lg:grid-cols-2">
           <div>
-            <div className="w-14 h-14 rounded-xl bg-[#F5A623] flex items-center justify-center mb-5">
-              <Icon className="w-7 h-7 text-[#1B2A4A]" />
-            </div>
-            <span className="text-[#F5A623] font-bold uppercase tracking-wider text-sm">Houston Handyman</span>
-            <h1 className="text-4xl sm:text-5xl font-black text-white mt-2 mb-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+              Houston handyman · {service.priceRange}
+            </p>
+            <h1 className="mt-3 font-display text-4xl font-medium text-cream sm:text-5xl md:text-6xl">
               {service.title}
             </h1>
-            <p className="text-white/70 text-lg mb-6">{service.description}</p>
-            <div className="flex gap-3">
-              <Link
-                href="/book"
-                className="bg-[#F5A623] text-[#1B2A4A] font-black px-8 py-3 rounded-xl hover:bg-[#e8941a] transition-colors"
-              >
-                Book Now
-              </Link>
-              <a
-                href={BUSINESS.phoneHref}
-                className="flex items-center gap-2 bg-white/10 text-white font-bold px-6 py-3 rounded-xl hover:bg-white/20 transition-colors"
-              >
-                <Phone className="w-4 h-4" />
-                Call
-              </a>
+            <p className="mt-4 max-w-xl text-lg text-cream/75">{service.description}</p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button href="/book">Book this service</Button>
+              <Button href={BUSINESS.phoneHref} variant="ghost">
+                <Phone className="h-4 w-4" />
+                {BUSINESS.phone}
+              </Button>
             </div>
           </div>
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-            <p className="text-[#F5A623] font-bold text-sm uppercase tracking-wider mb-4">Starting Price</p>
-            <p className="text-white text-4xl font-black mb-2">{service.priceRange}</p>
-            <p className="text-white/50 text-sm mb-6">Free estimate · No commitment required</p>
-            <div className="space-y-2">
+          <div className="hidden rounded-sm border border-white/10 bg-paper p-6 lg:block">
+            <QuoteForm compact />
+          </div>
+        </div>
+      </section>
+
+      <section className="section-pad bg-paper">
+        <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <div>
+            <h2 className="font-display text-3xl text-ink">How we handle this in Houston</h2>
+            <p className="mt-4 leading-relaxed text-muted">{service.longDescription}</p>
+            <p className="mt-4 leading-relaxed text-muted">{service.houstonNote}</p>
+
+            <h3 className="mt-10 font-display text-2xl text-ink">Common jobs</h3>
+            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+              {service.jobs.map((job) => (
+                <li key={job} className="flex items-start gap-2 border border-line bg-cream p-4 text-sm">
+                  <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-copper" />
+                  {job}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <aside className="h-fit border border-line bg-cream p-6 lg:sticky lg:top-32">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-copper">Starting range</p>
+            <p className="mt-2 font-display text-4xl text-ink">{service.priceRange}</p>
+            <p className="mt-1 text-sm text-muted">Free estimate · approved before we start</p>
+            <ul className="mt-6 space-y-2 text-sm text-ink/80">
               {[
-                'Licensed & insured technicians',
+                'Bonded & insured technicians',
                 '1-year workmanship guarantee',
                 'Same-week availability',
-                'Upfront pricing before we start',
+                'No travel fee in the metro',
               ].map((t) => (
-                <div key={t} className="flex items-center gap-2 text-white/70 text-sm">
-                  <CheckCircle className="w-4 h-4 text-[#F5A623] shrink-0" />
+                <li key={t} className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-copper" />
                   {t}
-                </div>
+                </li>
               ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Jobs list */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-black text-[#1B2A4A] mb-6 text-center">Common Jobs We Handle</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {service.jobs.map((job) => (
-              <div key={job} className="flex items-center gap-3 p-4 bg-[#F8F9FA] rounded-xl">
-                <CheckCircle className="w-5 h-5 text-[#F5A623] shrink-0" />
-                <span className="text-gray-700 text-sm font-medium">{job}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Trust + CTA */}
-      <section className="py-16 px-4 bg-[#F8F9FA]">
-        <div className="max-w-3xl mx-auto">
-          <div className="grid sm:grid-cols-3 gap-4 mb-10">
-            {[
-              { value: '4.9★', label: 'Google Rating', sub: '847+ reviews' },
-              { value: '3,200+', label: 'Jobs Done', sub: 'In Houston metro' },
-              { value: '1-Year', label: 'Guarantee', sub: 'On all labor' },
-            ].map(({ value, label, sub }) => (
-              <div key={label} className="bg-white rounded-xl p-5 text-center shadow-sm">
-                <p className="text-[#F5A623] font-black text-2xl">{value}</p>
-                <p className="text-[#1B2A4A] font-bold text-sm mt-1">{label}</p>
-                <p className="text-gray-500 text-xs">{sub}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Mini reviews */}
-          <div className="bg-white rounded-2xl p-6 mb-8 shadow-sm">
-            <div className="flex gap-1 mb-2">
-              {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-[#F5A623] text-[#F5A623]" />)}
-            </div>
-            <p className="text-gray-700 italic text-sm mb-3">
-              &ldquo;Incredible work. On time, professional, and the price was exactly what they quoted. I won&apos;t use anyone else.&rdquo;
-            </p>
-            <p className="text-gray-500 text-xs">— Houston homeowner</p>
-          </div>
-
-          <div className="text-center">
-            <Link
-              href="/book"
-              className="inline-flex items-center gap-2 bg-[#F5A623] text-[#1B2A4A] font-black px-12 py-4 rounded-xl hover:bg-[#e8941a] transition-colors text-lg"
+            </ul>
+            <Button href="/book" className="mt-6 w-full">
+              Get a free quote
+            </Button>
+            <a
+              href={BUSINESS.phoneHref}
+              className="mt-3 flex items-center justify-center gap-2 text-sm font-semibold text-ink"
             >
-              Book {service.title}
-            </Link>
+              <Phone className="h-4 w-4 text-copper" />
+              {BUSINESS.phone}
+            </a>
+          </aside>
+        </div>
+      </section>
+
+      <section className="pb-20 bg-paper">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <h2 className="mb-6 font-display text-2xl text-ink">Related services</h2>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {related.map((s) => (
+              <Link key={s.id} href={`/services/${s.id}`} className="group border border-line bg-cream">
+                <div className="relative h-36">
+                  <Image src={s.image} alt={s.title} fill className="object-cover" sizes="33vw" />
+                </div>
+                <div className="p-4">
+                  <p className="font-semibold text-ink group-hover:text-copper">{s.title}</p>
+                  <p className="text-xs text-muted">{s.priceRange}</p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
+
+      <div className="border-t border-line bg-cream px-4 py-12 lg:hidden">
+        <div className="mx-auto max-w-md">
+          <QuoteForm />
+        </div>
+      </div>
+
+      <CtaBand title={`Book ${service.shortTitle.toLowerCase()} this week.`} />
     </div>
   );
 }

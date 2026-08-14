@@ -125,7 +125,7 @@ export default function EmergencyPage() {
         <div className="max-w-3xl mx-auto text-center">
           <div className="grid grid-cols-3 gap-4 mb-10">
             {[
-              { icon: Shield, label: 'Licensed & Insured', sub: 'Every technician' },
+              { icon: Shield, label: 'Bonded & Insured', sub: 'Every technician' },
               { icon: Clock, label: 'Fast Dispatch', sub: 'Mon–Sat 7am–7pm' },
               { icon: CheckCircle, label: '1-Year Guarantee', sub: 'All labor covered' },
             ].map(({ icon: Icon, label, sub }) => (

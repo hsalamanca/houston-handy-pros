@@ -1,80 +1,59 @@
-import Link from 'next/link';
-import { ClipboardList, CalendarCheck, ThumbsUp } from 'lucide-react';
+import { ClipboardList, Truck, BadgeCheck } from 'lucide-react';
+import SectionHeading from '@/components/ui/SectionHeading';
+import Button from '@/components/ui/Button';
 
 const steps = [
   {
     icon: ClipboardList,
     step: '01',
-    title: 'Book Online in 60 Seconds',
+    title: 'Tell us the job',
     description:
-      'Choose your service, describe the job, pick a date that works. No phone tag required — though we love talking to our customers too.',
+      'Book online or call. Describe the list. Photos help. You get a clear estimate before anyone knocks.',
   },
   {
-    icon: CalendarCheck,
+    icon: Truck,
     step: '02',
-    title: 'We Show Up — On Time',
+    title: 'We show up on time',
     description:
-      'Your technician arrives in a branded vehicle, introduces themselves, and reviews the job with you before touching a thing. No surprises.',
+      'A background-checked tech arrives in a marked truck, walks the job with you, and confirms the price before work starts.',
   },
   {
-    icon: ThumbsUp,
+    icon: BadgeCheck,
     step: '03',
-    title: 'Job Done. Guaranteed.',
+    title: 'Done. Guaranteed.',
     description:
-      'We clean up completely when finished. You get an invoice, photos of the completed work, and a 1-year workmanship guarantee.',
+      'We clean up, send photos, and leave a 1-year workmanship guarantee. If it fails, we come back.',
   },
 ];
 
 export default function HowItWorks() {
   return (
-    <section className="py-20 bg-[#1B2A4A] relative overflow-hidden">
-      <div className="absolute inset-0 opacity-5">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1" fill="white" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#dots)" />
-        </svg>
-      </div>
+    <section className="section-pad bg-ink">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <SectionHeading
+          inverted
+          eyebrow="How it works"
+          title="From the list to done in three steps."
+          subtitle="No phone tag. No mystery invoices. No “we’ll see when we get there.”"
+        />
 
-      <div className="relative max-w-7xl mx-auto px-4">
-        <div className="text-center mb-14">
-          <span className="text-[#F5A623] font-bold uppercase tracking-wider text-sm">Simple Process</span>
-          <h2 className="text-3xl sm:text-4xl font-black text-white mt-2 mb-4">
-            From Broken to Fixed in 3 Steps
-          </h2>
-          <p className="text-white/60 max-w-xl mx-auto">
-            We&apos;ve made hiring a handyman as easy as ordering pizza — minus the 45-minute wait.
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8 relative">
-          {/* Connector line */}
-          <div className="hidden md:block absolute top-10 left-[20%] right-[20%] h-0.5 bg-[#F5A623]/30 z-0" />
-
+        <div className="grid gap-6 md:grid-cols-3">
           {steps.map(({ icon: Icon, step, title, description }) => (
-            <div key={step} className="relative z-10 text-center">
-              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[#F5A623] mb-6 relative">
-                <Icon className="w-9 h-9 text-[#1B2A4A]" />
-                <span className="absolute -top-2 -right-2 w-7 h-7 bg-white text-[#1B2A4A] rounded-full text-xs font-black flex items-center justify-center shadow">
-                  {step}
+            <div key={step} className="border border-white/10 bg-white/5 p-7">
+              <div className="mb-6 flex items-center justify-between">
+                <span className="flex h-12 w-12 items-center justify-center rounded-sm bg-copper text-ink">
+                  <Icon className="h-5 w-5" />
                 </span>
+                <span className="font-display text-3xl text-white/15">{step}</span>
               </div>
-              <h3 className="text-white font-bold text-lg mb-3">{title}</h3>
-              <p className="text-white/60 text-sm leading-relaxed">{description}</p>
+              <h3 className="font-display text-2xl text-cream">{title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-cream/65">{description}</p>
             </div>
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <Link
-            href="/book"
-            className="inline-flex items-center gap-2 bg-[#F5A623] text-[#1B2A4A] font-black text-lg px-10 py-4 rounded-xl hover:bg-[#e8941a] transition-colors"
-          >
-            Book My Free Estimate
-          </Link>
+        <div className="mt-12 text-center">
+          <Button href="/book">Book my free estimate</Button>
         </div>
       </div>
     </section>

@@ -38,8 +38,8 @@ async function sendConfirmationEmail(booking: BookingPayload) {
               <tr><td style="padding:8px 0;color:#6B7280;font-size:14px;">Date & Time</td><td style="padding:8px 0;font-weight:600;color:#1B2A4A;">${booking.date} at ${booking.time}</td></tr>
               <tr><td style="padding:8px 0;color:#6B7280;font-size:14px;">Address</td><td style="padding:8px 0;font-weight:600;color:#1B2A4A;">${booking.address}</td></tr>
             </table>
-            <p style="color:#374151;font-size:14px;">Questions? Call us at <a href="tel:+17135550190" style="color:#F5A623;">(713) 555-0190</a></p>
-            <p style="color:#6B7280;font-size:12px;margin-top:24px;">Houston Handy Pros · Licensed & Insured · 1-Year Guarantee</p>
+            <p style="color:#374151;font-size:14px;">Questions? Call us at <a href="tel:+18322150668" style="color:#F5A623;">(832) 215-0668</a></p>
+            <p style="color:#6B7280;font-size:12px;margin-top:24px;">Houston Handy Pros · Bonded & Insured · 1-Year Guarantee</p>
           </div>
         </div>
       `,
@@ -54,7 +54,7 @@ async function sendConfirmationSMS(booking: BookingPayload) {
   const from = process.env.TWILIO_PHONE_NUMBER;
   if (!sid || !token || !from) return;
 
-  const body = `Houston Handy Pros: Your ${booking.service} booking on ${booking.date} at ${booking.time} is confirmed! Questions? Call (713) 555-0190.`;
+  const body = `Houston Handy Pros: Your ${booking.service} booking on ${booking.date} at ${booking.time} is confirmed! Questions? Call (832) 215-0668.`;
   const params = new URLSearchParams({ From: from, To: booking.phone, Body: body });
 
   await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {

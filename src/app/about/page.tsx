@@ -1,100 +1,96 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import Image from 'next/image';
 import { Shield, Award, Users, Heart, CheckCircle } from 'lucide-react';
 import { BUSINESS } from '@/lib/constants';
+import PageHero from '@/components/ui/PageHero';
+import Button from '@/components/ui/Button';
+import CtaBand from '@/components/ui/CtaBand';
 
 export const metadata: Metadata = {
-  title: 'About Houston Handy Pros | Our Story & Team',
+  title: 'About Houston Handy Pros',
   description:
-    'Learn about Houston Handy Pros — Houston\'s trusted handyman service since 2015. Meet our team, see our licenses, and learn our story.',
+    'Houston Handy Pros is an independent, insured handyman company founded in The Heights in 2015. Meet the team and see why homeowners call us back.',
 };
 
 const team = [
-  { name: 'Marcus Johnson', role: 'Founder & Lead Technician', spec: 'Carpentry, Plumbing, General Repairs', years: 15 },
-  { name: 'Derek Williams', role: 'Senior Technician', spec: 'Electrical, Drywall, Painting', years: 10 },
-  { name: 'Carlos Reyes', role: 'Field Technician', spec: 'Flooring, Tile, Pressure Washing', years: 7 },
-  { name: 'Tony Nguyen', role: 'Field Technician', spec: 'TV Mounting, Smart Home, Assembly', years: 5 },
+  { name: 'Marcus Johnson', role: 'Founder & Lead Technician', spec: 'Carpentry, plumbing, general repairs', years: 15 },
+  { name: 'Derek Williams', role: 'Senior Technician', spec: 'Electrical, drywall, painting', years: 10 },
+  { name: 'Carlos Reyes', role: 'Field Technician', spec: 'Flooring, tile, pressure washing', years: 7 },
+  { name: 'Tony Nguyen', role: 'Field Technician', spec: 'TV mounting, smart home, assembly', years: 5 },
 ];
 
 const values = [
-  { icon: Shield, title: 'Safety First', desc: 'Every tech is background-checked, licensed, and insured. You know who\'s in your home.' },
-  { icon: Award, title: 'Quality Work', desc: '1-year workmanship guarantee on every job we complete. Period.' },
-  { icon: Users, title: 'Respect', desc: 'We treat your home like it\'s our own. We clean up. We don\'t smoke, swear, or overstay.' },
-  { icon: Heart, title: 'Community', desc: 'Houston raised us. We give back through Habitat for Humanity and local school repair days.' },
+  { icon: Shield, title: 'Safety first', desc: 'Background-checked and insured. You know who is in your home.' },
+  { icon: Award, title: 'Quality work', desc: '1-year workmanship guarantee on every job. Period.' },
+  { icon: Users, title: 'Respect', desc: 'We treat the house like it is ours. We clean up. We do not overstay.' },
+  { icon: Heart, title: 'Community', desc: 'Houston raised us. We give back through Habitat for Humanity and school repair days.' },
 ];
 
 export default function AboutPage() {
   return (
     <div>
-      {/* Hero */}
-      <section className="bg-[#1B2A4A] py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <span className="text-[#F5A623] font-bold uppercase tracking-wider text-sm">Our Story</span>
-          <h1 className="text-4xl sm:text-5xl font-black text-white mt-3 mb-5">
-            Built in Houston. Built for Houston.
-          </h1>
-          <p className="text-white/70 text-lg max-w-2xl mx-auto">
-            Houston Handy Pros started in a garage in The Heights in {BUSINESS.founded}. Today we&apos;re Houston&apos;s most-reviewed independent handyman service — and we&apos;re still run by the same guy who started it.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Our story"
+        title="Built in Houston. Built for Houston."
+        subtitle={`Started in a Heights garage in ${BUSINESS.founded}. Still independent. Still the same rule: fix it right the first time, or come back and fix it for free.`}
+      />
 
-      {/* Founder story */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          <div className="bg-[#1B2A4A] rounded-3xl p-10 text-center">
-            <div className="w-24 h-24 rounded-full bg-[#F5A623] flex items-center justify-center mx-auto mb-4">
-              <span className="text-[#1B2A4A] font-black text-3xl">M</span>
+      <section className="section-pad bg-paper">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-sm">
+            <Image
+              src="/images/about.jpg"
+              alt="Houston Handy Pros founder"
+              fill
+              className="object-cover"
+              sizes="50vw"
+            />
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-copper">Founder</p>
+            <h2 className="mt-2 font-display text-3xl text-ink md:text-4xl">Why I started this company</h2>
+            <div className="mt-5 space-y-4 leading-relaxed text-muted">
+              <p>
+                I grew up watching my dad fix everything himself — not because he wanted to, but because he could not
+                afford to hire anyone. I apprenticed under a master carpenter in Galveston and spent a decade learning
+                the trade from the ground up.
+              </p>
+              <p>
+                When I moved to Houston I kept seeing the same problem: homeowners either could not find a reliable
+                handyman, got gouged, or paid twice to undo the first job.
+              </p>
+              <p>
+                So in {BUSINESS.founded} I started Houston Handy Pros with one truck, one toolbox, and one rule:{' '}
+                <strong className="text-ink">fix it right the first time, or come back and fix it for free.</strong>
+              </p>
             </div>
-            <h3 className="text-white font-black text-xl mb-1">Marcus Johnson</h3>
-            <p className="text-[#F5A623] text-sm mb-4">Founder & Lead Technician</p>
-            <div className="grid grid-cols-2 gap-4 mt-6">
+            <div className="mt-8 grid grid-cols-2 gap-3">
               {[
-                { v: '15+', l: 'Years Experience' },
-                { v: `${BUSINESS.jobsCompleted}+`, l: 'Jobs Completed' },
-                { v: '5★', l: 'Average Rating' },
-                { v: '2015', l: 'Founded' },
+                { v: '15+', l: 'Years experience' },
+                { v: `${BUSINESS.jobsCompleted.toLocaleString()}+`, l: 'Jobs completed' },
+                { v: `${BUSINESS.rating}★`, l: 'Average rating' },
+                { v: String(BUSINESS.founded), l: 'Founded' },
               ].map(({ v, l }) => (
-                <div key={l} className="bg-white/10 rounded-xl p-3">
-                  <p className="text-[#F5A623] font-black text-xl">{v}</p>
-                  <p className="text-white/60 text-xs">{l}</p>
+                <div key={l} className="border border-line bg-cream p-4">
+                  <p className="font-display text-2xl text-ink">{v}</p>
+                  <p className="text-xs text-muted">{l}</p>
                 </div>
               ))}
             </div>
           </div>
-          <div>
-            <h2 className="text-3xl font-black text-[#1B2A4A] mb-5">Why I Started This Company</h2>
-            <div className="space-y-4 text-gray-600 leading-relaxed">
-              <p>
-                I grew up watching my dad fix everything himself — not because he wanted to, but because he couldn&apos;t afford to hire anyone. When I was old enough to work, I apprenticed under a master carpenter in Galveston and spent a decade learning the trade from the ground up.
-              </p>
-              <p>
-                When I moved to Houston, I kept seeing the same problem: homeowners either couldn&apos;t find a reliable handyman, got gouged on price, or ended up with shoddy work that cost more to fix later. I knew I could do better.
-              </p>
-              <p>
-                So in {BUSINESS.founded}, I started Houston Handy Pros with one truck, one toolbox, and one rule: <strong>fix it right the first time, or come back and fix it for free.</strong>
-              </p>
-              <p>
-                That rule is still the backbone of everything we do. It always will be.
-              </p>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* Values */}
-      <section className="py-20 px-4 bg-[#F8F9FA]">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-black text-[#1B2A4A] mb-10 text-center">What We Stand For</h2>
-          <div className="grid sm:grid-cols-2 gap-6">
+      <section className="section-pad bg-cream">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <h2 className="mb-10 text-center font-display text-3xl text-ink">What we stand for</h2>
+          <div className="grid gap-5 sm:grid-cols-2">
             {values.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="bg-white rounded-2xl p-6 flex gap-4">
-                <div className="w-12 h-12 rounded-xl bg-[#1B2A4A] flex items-center justify-center shrink-0">
-                  <Icon className="w-6 h-6 text-[#F5A623]" />
-                </div>
+              <div key={title} className="flex gap-4 border border-line bg-paper p-6">
+                <Icon className="h-6 w-6 shrink-0 text-copper" />
                 <div>
-                  <h3 className="font-bold text-[#1B2A4A] text-base mb-1">{title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{desc}</p>
+                  <h3 className="font-semibold text-ink">{title}</h3>
+                  <p className="mt-1 text-sm text-muted">{desc}</p>
                 </div>
               </div>
             ))}
@@ -102,52 +98,51 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Team */}
-      <section className="py-20 px-4 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-black text-[#1B2A4A] mb-3 text-center">The Team</h2>
-          <p className="text-gray-600 text-center mb-10">Every technician is background-checked, licensed, and drug-tested.</p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="section-pad bg-paper">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <h2 className="text-center font-display text-3xl text-ink">The crew</h2>
+          <p className="mx-auto mt-3 max-w-xl text-center text-muted">
+            Every technician is background-checked and drug-tested.
+          </p>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {team.map((member) => (
-              <div key={member.name} className="text-center">
-                <div className="w-20 h-20 rounded-full bg-[#1B2A4A] flex items-center justify-center mx-auto mb-4">
-                  <span className="text-[#F5A623] font-black text-2xl">{member.name[0]}</span>
+              <div key={member.name} className="border border-line bg-cream p-6 text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-ink font-display text-2xl text-gold">
+                  {member.name[0]}
                 </div>
-                <h3 className="font-bold text-[#1B2A4A] text-sm mb-0.5">{member.name}</h3>
-                <p className="text-[#F5A623] text-xs font-semibold mb-1">{member.role}</p>
-                <p className="text-gray-500 text-xs mb-2">{member.spec}</p>
-                <p className="text-gray-400 text-xs">{member.years} yrs experience</p>
+                <h3 className="font-semibold text-ink">{member.name}</h3>
+                <p className="mt-1 text-xs font-semibold text-copper">{member.role}</p>
+                <p className="mt-2 text-xs text-muted">{member.spec}</p>
+                <p className="mt-1 text-xs text-muted">{member.years} yrs experience</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Licenses */}
-      <section className="py-16 px-4 bg-[#1B2A4A]">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl font-black text-white mb-8">Fully Licensed, Bonded & Insured</h2>
-          <div className="grid sm:grid-cols-3 gap-4 mb-10">
+      <section className="bg-ink py-16">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+          <h2 className="font-display text-3xl text-cream">Bonded, insured, and guaranteed</h2>
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
             {[
-              { label: 'TX Contractor License', value: 'TCLP #12345678' },
-              { label: 'General Liability', value: '$1,000,000 Coverage' },
-              { label: 'Workers Compensation', value: 'All technicians covered' },
+              { label: 'General liability', value: BUSINESS.insurance },
+              { label: 'Background-checked crew', value: 'Every technician' },
+              { label: 'Workmanship guarantee', value: BUSINESS.guarantee },
             ].map(({ label, value }) => (
-              <div key={label} className="bg-white/10 rounded-xl p-5">
-                <CheckCircle className="w-6 h-6 text-[#F5A623] mx-auto mb-2" />
-                <p className="text-white font-bold text-sm">{label}</p>
-                <p className="text-white/60 text-xs mt-1">{value}</p>
+              <div key={label} className="border border-white/10 bg-white/5 p-5">
+                <CheckCircle className="mx-auto mb-2 h-5 w-5 text-gold" />
+                <p className="text-sm font-semibold text-cream">{label}</p>
+                <p className="mt-1 text-xs text-cream/60">{value}</p>
               </div>
             ))}
           </div>
-          <Link
-            href="/book"
-            className="inline-flex items-center gap-2 bg-[#F5A623] text-[#1B2A4A] font-black px-10 py-4 rounded-xl hover:bg-[#e8941a] transition-colors"
-          >
-            Book Our Team Today
-          </Link>
+          <div className="mt-8">
+            <Button href="/book">Book the team</Button>
+          </div>
         </div>
       </section>
+
+      <CtaBand />
     </div>
   );
 }
