@@ -59,35 +59,33 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 
-      <section className="relative min-h-[52vh] overflow-hidden bg-ink">
-        <Image
-          src={service.image}
-          alt={service.title}
-          fill
-          priority
-          className="object-cover opacity-35"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/80 to-ink/40" />
-        <div className="relative mx-auto grid max-w-7xl items-end gap-8 px-4 py-20 sm:px-6 lg:grid-cols-2">
+      <section className="bg-[#f5f5f7]">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+            <p className="text-[13px] font-medium text-muted">
               Houston handyman · {service.priceRange}
             </p>
-            <h1 className="mt-3 font-display text-4xl font-medium text-cream sm:text-5xl md:text-6xl">
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-ink sm:text-5xl md:text-6xl">
               {service.title}
             </h1>
-            <p className="mt-4 max-w-xl text-lg text-cream/75">{service.description}</p>
+            <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-muted">{service.description}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button href="/book">Book this service</Button>
-              <Button href={BUSINESS.phoneHref} variant="ghost">
+              <Button href={BUSINESS.phoneHref} variant="secondary">
                 <Phone className="h-4 w-4" />
                 {BUSINESS.phone}
               </Button>
             </div>
           </div>
-          <div className="hidden rounded-sm border border-white/10 bg-paper p-6 lg:block">
-            <QuoteForm compact />
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem]">
+            <Image
+              src={service.image}
+              alt={service.title}
+              fill
+              priority
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+            />
           </div>
         </div>
       </section>
@@ -110,7 +108,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             </ul>
           </div>
 
-          <aside className="h-fit border border-line bg-cream p-6 lg:sticky lg:top-32">
+          <aside className="h-fit rounded-[1.75rem] bg-[#f5f5f7] p-6 lg:sticky lg:top-24">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-copper">Starting range</p>
             <p className="mt-2 font-display text-4xl text-ink">{service.priceRange}</p>
             <p className="mt-1 text-sm text-muted">Free estimate · approved before we start</p>
@@ -146,7 +144,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           <h2 className="mb-6 font-display text-2xl text-ink">Related services</h2>
           <div className="grid gap-4 sm:grid-cols-3">
             {related.map((s) => (
-              <Link key={s.id} href={`/services/${s.id}`} className="group border border-line bg-cream">
+              <Link key={s.id} href={`/services/${s.id}`} className="group overflow-hidden rounded-[1.5rem] bg-[#f5f5f7]">
                 <div className="relative h-36">
                   <Image src={s.image} alt={s.title} fill className="object-cover" sizes="33vw" />
                 </div>

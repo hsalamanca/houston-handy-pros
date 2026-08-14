@@ -1,39 +1,33 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { MapPin } from 'lucide-react';
 import { NEIGHBORHOODS } from '@/lib/constants';
 import { NEIGHBORHOOD_DATA } from '@/lib/neighborhoods';
 import Button from '@/components/ui/Button';
 
 export default function ServiceAreaSection() {
   return (
-    <section className="section-pad bg-paper">
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
+    <section className="section-pad bg-white">
+      <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 sm:px-6 lg:grid-cols-2">
         <div>
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-copper">
-            Service area
-          </p>
-          <h2 className="font-display text-3xl font-medium tracking-tight text-ink sm:text-4xl md:text-[2.6rem]">
+          <p className="mb-3 text-[13px] font-medium text-muted">Service area</p>
+          <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl md:text-[2.75rem] md:leading-[1.12]">
             From The Heights to Katy — we come to you.
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-muted">
-            Forty miles from downtown. No travel fee inside the metro. Neighborhood pages below
-            if you want the local version of the story.
+          <p className="mt-4 text-[17px] leading-relaxed text-muted">
+            Forty miles from downtown. No travel fee inside the metro.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-2">
             {NEIGHBORHOODS.map((n) => {
               const slug = NEIGHBORHOOD_DATA.find((d) => d.name === n)?.slug;
               const className =
-                'inline-flex items-center gap-1 rounded-full border border-line bg-cream px-3 py-1 text-xs text-ink/80 hover:border-copper';
+                'inline-flex items-center rounded-full bg-[#f5f5f7] px-3 py-1.5 text-[13px] text-ink/80 hover:bg-[#e8e8ed]';
               return slug ? (
                 <Link key={n} href={`/handyman/${slug}`} className={className}>
-                  <MapPin className="h-3 w-3 text-copper" />
                   {n}
                 </Link>
               ) : (
                 <span key={n} className={className}>
-                  <MapPin className="h-3 w-3 text-copper" />
                   {n}
                 </span>
               );
@@ -47,7 +41,7 @@ export default function ServiceAreaSection() {
           </div>
         </div>
 
-        <div className="relative aspect-[4/3] overflow-hidden rounded-sm">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem]">
           <Image
             src="/images/houston-neighborhood.jpg"
             alt="Houston Heights street with craftsman bungalows"
@@ -55,9 +49,9 @@ export default function ServiceAreaSection() {
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 50vw"
           />
-          <div className="absolute bottom-4 left-4 right-4 border border-white/15 bg-ink/80 p-4 text-cream backdrop-blur-sm">
-            <p className="font-display text-xl">Houston metro</p>
-            <p className="text-sm text-cream/70">40-mile radius · no travel fee</p>
+          <div className="absolute bottom-5 left-5 rounded-2xl bg-white/85 px-5 py-4 backdrop-blur-xl">
+            <p className="text-lg font-semibold tracking-tight text-ink">Houston metro</p>
+            <p className="text-sm text-muted">40-mile radius · no travel fee</p>
           </div>
         </div>
       </div>

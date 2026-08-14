@@ -9,30 +9,30 @@ export default function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="section-pad bg-cream">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
+    <section className="section-pad bg-[#f5f5f7]">
+      <div className="mx-auto max-w-3xl px-5 sm:px-6">
         <SectionHeading
           eyebrow="Questions"
           title="What Houston homeowners ask first."
         />
 
-        <div className="space-y-2">
+        <div className="divide-y divide-line">
           {FAQS.map((faq, i) => (
-            <div key={faq.q} className="border border-line bg-paper">
+            <div key={faq.q}>
               <button
-                className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left"
+                className="flex w-full items-center justify-between gap-4 py-5 text-left"
                 onClick={() => setOpen(open === i ? null : i)}
                 aria-expanded={open === i}
               >
-                <span className="font-semibold text-ink">{faq.q}</span>
+                <span className="text-[17px] font-medium tracking-tight text-ink">{faq.q}</span>
                 {open === i ? (
-                  <Minus className="h-4 w-4 shrink-0 text-copper" />
+                  <Minus className="h-4 w-4 shrink-0 text-muted" />
                 ) : (
                   <Plus className="h-4 w-4 shrink-0 text-muted" />
                 )}
               </button>
               {open === i && (
-                <p className="px-5 pb-5 text-sm leading-relaxed text-muted">{faq.a}</p>
+                <p className="pb-5 text-[15px] leading-relaxed text-muted">{faq.a}</p>
               )}
             </div>
           ))}
@@ -55,7 +55,7 @@ export default function FAQ() {
 
         <p className="mt-10 text-center text-sm text-muted">
           Still deciding?{' '}
-          <a href={BUSINESS.phoneHref} className="font-semibold text-copper">
+          <a href={BUSINESS.phoneHref} className="text-blue hover:underline">
             Call {BUSINESS.phone}
           </a>
         </p>

@@ -4,37 +4,42 @@ import { cn } from '@/lib/utils';
 export default function BrandMark({
   className,
   inverted = false,
+  compact = false,
 }: {
   className?: string;
   inverted?: boolean;
+  compact?: boolean;
 }) {
   return (
-    <div className={cn('flex items-center gap-3', className)}>
+    <div className={cn('flex items-center gap-2.5', className)}>
       <Image
         src={inverted ? '/images/logo-mark.jpg' : '/images/logo-icon.jpg'}
         alt="Houston Handy Pros"
-        width={40}
-        height={40}
-        className="h-10 w-10 rounded-sm object-cover"
+        width={compact ? 32 : 40}
+        height={compact ? 32 : 40}
+        className={cn('rounded-xl object-cover', compact ? 'h-8 w-8' : 'h-10 w-10')}
         priority
       />
       <span className="leading-none">
         <span
           className={cn(
-            'block font-display text-[1.05rem] font-semibold tracking-tight',
-            inverted ? 'text-cream' : 'text-ink'
+            'block font-semibold tracking-tight',
+            compact ? 'text-[15px]' : 'text-[1.05rem]',
+            inverted ? 'text-white' : 'text-ink'
           )}
         >
           Houston Handy Pros
         </span>
-        <span
-          className={cn(
-            'mt-1 block text-[10px] font-semibold uppercase tracking-[0.18em]',
-            inverted ? 'text-gold' : 'text-copper'
-          )}
-        >
-          Est. 2015 · Houston, TX
-        </span>
+        {!compact && (
+          <span
+            className={cn(
+              'mt-1 block text-[10px] font-medium uppercase tracking-[0.16em]',
+              inverted ? 'text-white/50' : 'text-muted'
+            )}
+          >
+            Houston, TX
+          </span>
+        )}
       </span>
     </div>
   );

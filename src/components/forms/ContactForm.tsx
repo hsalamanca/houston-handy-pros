@@ -66,7 +66,7 @@ export default function ContactForm() {
             placeholder={placeholder}
             value={form[key]}
             onChange={(e) => update(key, e.target.value)}
-            className="w-full rounded-sm border border-line bg-paper px-4 py-3 text-sm outline-none ring-copper/40 focus:ring-2"
+            className="field"
           />
         </div>
       ))}
@@ -75,7 +75,7 @@ export default function ContactForm() {
         <select
           value={form.service}
           onChange={(e) => update('service', e.target.value)}
-          className="w-full rounded-sm border border-line bg-paper px-4 py-3 text-sm outline-none ring-copper/40 focus:ring-2"
+          className="field"
         >
           <option value="">Select a service…</option>
           {SERVICES.map((s) => (
@@ -93,7 +93,7 @@ export default function ContactForm() {
           placeholder="Tell us what you need…"
           value={form.message}
           onChange={(e) => update('message', e.target.value)}
-          className="w-full resize-none rounded-sm border border-line bg-paper px-4 py-3 text-sm outline-none ring-copper/40 focus:ring-2"
+          className="field resize-none"
         />
       </div>
       {error && <p className="text-sm text-red-700">{error}</p>}

@@ -6,12 +6,12 @@ import Button from '@/components/ui/Button';
 
 export default function GalleryPreview() {
   return (
-    <section className="section-pad bg-paper">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+    <section className="section-pad bg-white">
+      <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <SectionHeading
           eyebrow="Recent work"
           title="The finish is the point."
-          subtitle="Real Houston jobs. Ask for a walkthrough of similar work when you book."
+          subtitle="Ask for a walkthrough of similar work when you book."
         />
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -19,28 +19,28 @@ export default function GalleryPreview() {
             <Link
               key={item.id}
               href="/portfolio"
-              className="group relative block aspect-[4/3] overflow-hidden rounded-sm"
+              className="group relative block aspect-[4/3] overflow-hidden rounded-[1.75rem]"
             >
               <Image
                 src={item.image}
                 alt={`${item.title} in ${item.location}`}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gold">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-5">
+                <p className="text-[12px] text-white/70">
                   {item.category} · {item.location}
                 </p>
-                <p className="mt-1 font-display text-lg text-cream">{item.title}</p>
+                <p className="mt-0.5 text-lg font-semibold tracking-tight text-white">{item.title}</p>
               </div>
             </Link>
           ))}
         </div>
 
-        <div className="mt-10 text-center">
-          <Button href="/portfolio" variant="outline">
+        <div className="mt-12 text-center">
+          <Button href="/portfolio" variant="secondary">
             See the full gallery
           </Button>
         </div>

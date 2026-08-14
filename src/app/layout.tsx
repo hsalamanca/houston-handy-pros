@@ -1,18 +1,12 @@
 import type { Metadata } from 'next';
-import { Fraunces, Manrope } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import MobileCallBar from '@/components/layout/MobileCallBar';
 import { BUSINESS } from '@/lib/constants';
 
-const display = Fraunces({
-  subsets: ['latin'],
-  variable: '--font-display',
-  display: 'swap',
-});
-
-const sans = Manrope({
+const sans = Inter({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
@@ -119,10 +113,10 @@ const schema = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable}`}>
+    <html lang="en" className={sans.variable}>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#101820" />
+        <meta name="theme-color" content="#f5f5f7" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
@@ -130,7 +124,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="font-sans antialiased">
         <Navbar />
-        <main className="pb-16 pt-[104px] md:pb-0">{children}</main>
+        <main className="pb-20 pt-14 md:pb-0">{children}</main>
         <Footer />
         <MobileCallBar />
       </body>

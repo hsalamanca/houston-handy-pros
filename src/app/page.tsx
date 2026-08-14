@@ -26,7 +26,7 @@ export default function HomePage() {
       <GalleryPreview />
       <ServiceAreaSection />
       <FAQ />
-      <CtaBand title="15% off your first job." subtitle="New Houston customers. Book this month. Mention the launch offer or use the form." />
+      <CtaBand title="15% off your first job." subtitle="New Houston customers. Book this month." />
     </>
   );
 }

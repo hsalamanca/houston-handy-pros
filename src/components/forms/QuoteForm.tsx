@@ -75,7 +75,7 @@ export default function QuoteForm({ compact = false }: { compact?: boolean }) {
         placeholder="Full name"
         value={form.name}
         onChange={(e) => update('name', e.target.value)}
-        className="w-full rounded-sm border border-line bg-paper px-4 py-3 text-sm text-ink outline-none ring-copper/40 placeholder:text-muted/70 focus:ring-2"
+        className="field"
       />
       <input
         required
@@ -83,7 +83,7 @@ export default function QuoteForm({ compact = false }: { compact?: boolean }) {
         placeholder="Phone"
         value={form.phone}
         onChange={(e) => update('phone', e.target.value)}
-        className="w-full rounded-sm border border-line bg-paper px-4 py-3 text-sm text-ink outline-none ring-copper/40 placeholder:text-muted/70 focus:ring-2"
+        className="field"
       />
       <input
         required
@@ -91,13 +91,13 @@ export default function QuoteForm({ compact = false }: { compact?: boolean }) {
         placeholder="Email"
         value={form.email}
         onChange={(e) => update('email', e.target.value)}
-        className="w-full rounded-sm border border-line bg-paper px-4 py-3 text-sm text-ink outline-none ring-copper/40 placeholder:text-muted/70 focus:ring-2"
+        className="field"
       />
       <select
         required
         value={form.service}
         onChange={(e) => update('service', e.target.value)}
-        className="w-full rounded-sm border border-line bg-paper px-4 py-3 text-sm text-ink outline-none ring-copper/40 focus:ring-2"
+        className="field"
       >
         <option value="">Service needed</option>
         {SERVICES.map((s) => (
@@ -113,12 +113,12 @@ export default function QuoteForm({ compact = false }: { compact?: boolean }) {
           placeholder="What’s going on? (optional)"
           value={form.message}
           onChange={(e) => update('message', e.target.value)}
-          className="w-full resize-none rounded-sm border border-line bg-paper px-4 py-3 text-sm text-ink outline-none ring-copper/40 placeholder:text-muted/70 focus:ring-2"
+          className="field resize-none"
         />
       )}
       {error && <p className="text-center text-sm text-red-700">{error}</p>}
       <Button type="submit" disabled={submitting} className="w-full">
-        {submitting ? 'Sending…' : 'Get Free Quote'}
+        {submitting ? 'Sending…' : 'Get a quote'}
       </Button>
       <p className="text-center text-[11px] text-muted">
         No spam. We only use this to quote your job.

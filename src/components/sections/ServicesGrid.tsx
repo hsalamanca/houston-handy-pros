@@ -9,39 +9,37 @@ export default function ServicesGrid({ limit }: { limit?: number }) {
   const list = limit ? SERVICES.slice(0, limit) : SERVICES;
 
   return (
-    <section className="section-pad bg-paper">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+    <section className="section-pad bg-white">
+      <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <SectionHeading
           eyebrow="What we handle"
           title="One crew. The whole list."
           subtitle="Houston humidity, clay soil, and storm season create a specific set of jobs. We do those jobs — and we do them once."
         />
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((service) => (
             <Link
               key={service.id}
               href={`/services/${service.id}`}
-              className="group overflow-hidden rounded-sm border border-line bg-cream transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl"
+              className="group overflow-hidden rounded-[1.75rem] bg-[#f5f5f7] transition-transform duration-300 hover:-translate-y-0.5"
             >
-              <div className="relative h-48 overflow-hidden">
+              <div className="relative h-52 overflow-hidden">
                 <Image
                   src={service.image}
                   alt={service.title}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
-                <span className="absolute bottom-3 left-3 rounded-sm bg-ink/80 px-2.5 py-1 text-xs font-semibold text-gold">
-                  {service.priceRange}
-                </span>
               </div>
-              <div className="p-5">
-                <h3 className="font-display text-xl text-ink">{service.title}</h3>
+              <div className="p-6">
+                <p className="text-[13px] text-muted">{service.priceRange}</p>
+                <h3 className="mt-1 text-[21px] font-semibold tracking-tight text-ink">{service.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{service.description}</p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-copper">
-                  View service
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <span className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-blue">
+                  Learn more
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </span>
               </div>
             </Link>
@@ -49,7 +47,7 @@ export default function ServicesGrid({ limit }: { limit?: number }) {
         </div>
 
         {limit && (
-          <div className="mt-10 text-center">
+          <div className="mt-12 text-center">
             <Button href="/services" variant="secondary">
               View all services
               <ArrowRight className="h-4 w-4" />
