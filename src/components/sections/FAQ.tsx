@@ -9,7 +9,7 @@ export default function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="section-pad bg-[#f5f5f7]">
+    <section className="section-pad bg-cream">
       <div className="mx-auto max-w-3xl px-5 sm:px-6">
         <SectionHeading
           eyebrow="Questions"
@@ -55,7 +55,7 @@ export default function FAQ() {
 
         <p className="mt-10 text-center text-sm text-muted">
           Still deciding?{' '}
-          <a href={BUSINESS.phoneHref} className="text-blue hover:underline">
+          <a href={BUSINESS.phoneHref} className="font-medium text-copper hover:underline">
             Call {BUSINESS.phone}
           </a>
         </p>

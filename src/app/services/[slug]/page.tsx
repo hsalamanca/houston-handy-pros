@@ -59,7 +59,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 
-      <section className="bg-[#f5f5f7]">
+      <section className="bg-cream">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
           <div>
             <p className="text-[13px] font-medium text-muted">
@@ -108,7 +108,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             </ul>
           </div>
 
-          <aside className="h-fit rounded-[1.75rem] bg-[#f5f5f7] p-6 lg:sticky lg:top-24">
+          <aside className="h-fit rounded-[1.75rem] bg-cream p-6 lg:sticky lg:top-24">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-copper">Starting range</p>
             <p className="mt-2 font-display text-4xl text-ink">{service.priceRange}</p>
             <p className="mt-1 text-sm text-muted">Free estimate · approved before we start</p>
@@ -144,7 +144,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           <h2 className="mb-6 font-display text-2xl text-ink">Related services</h2>
           <div className="grid gap-4 sm:grid-cols-3">
             {related.map((s) => (
-              <Link key={s.id} href={`/services/${s.id}`} className="group overflow-hidden rounded-[1.5rem] bg-[#f5f5f7]">
+              <Link key={s.id} href={`/services/${s.id}`} className="group overflow-hidden rounded-[1.5rem] bg-cream">
                 <div className="relative h-36">
                   <Image src={s.image} alt={s.title} fill className="object-cover" sizes="33vw" />
                 </div>

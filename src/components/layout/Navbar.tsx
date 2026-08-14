@@ -60,7 +60,7 @@ export default function Navbar() {
                       <Link
                         key={s.id}
                         href={`/services/${s.id}`}
-                        className="block rounded-xl px-3 py-2 text-sm text-ink/80 hover:bg-[#f5f5f7] hover:text-ink"
+                        className="block rounded-xl px-3 py-2 text-sm text-ink/80 hover:bg-cream hover:text-ink"
                       >
                         {s.title}
                       </Link>
@@ -89,7 +89,7 @@ export default function Navbar() {
             </a>
             <Link
               href="/book"
-              className="rounded-full bg-ink px-4 py-1.5 text-[13px] font-medium text-white hover:bg-black"
+              className="rounded-full bg-copper px-4 py-1.5 text-[13px] font-medium text-white hover:bg-copper-dark"
             >
               Book
             </Link>
@@ -119,7 +119,7 @@ export default function Navbar() {
             ))}
             <a
               href={BUSINESS.phoneHref}
-              className="mt-5 flex items-center justify-center gap-2 rounded-full bg-[#f5f5f7] py-3 text-sm font-medium text-ink"
+              className="mt-5 flex items-center justify-center gap-2 rounded-full bg-cream py-3 text-sm font-medium text-ink"
             >
               <Phone className="h-4 w-4" />
               Call {BUSINESS.phone}
@@ -127,7 +127,7 @@ export default function Navbar() {
             <Link
               href="/book"
               onClick={() => setMobileOpen(false)}
-              className="mt-3 block rounded-full bg-ink py-3 text-center text-sm font-medium text-white"
+              className="mt-3 block rounded-full bg-copper py-3 text-center text-sm font-medium text-white"
             >
               Get a quote
             </Link>

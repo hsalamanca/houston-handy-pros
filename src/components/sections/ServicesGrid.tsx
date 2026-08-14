@@ -22,7 +22,7 @@ export default function ServicesGrid({ limit }: { limit?: number }) {
             <Link
               key={service.id}
               href={`/services/${service.id}`}
-              className="group overflow-hidden rounded-[1.75rem] bg-[#f5f5f7] transition-transform duration-300 hover:-translate-y-0.5"
+              className="group overflow-hidden rounded-[1.75rem] bg-cream transition-transform duration-300 hover:-translate-y-0.5"
             >
               <div className="relative h-52 overflow-hidden">
                 <Image
@@ -37,7 +37,7 @@ export default function ServicesGrid({ limit }: { limit?: number }) {
                 <p className="text-[13px] text-muted">{service.priceRange}</p>
                 <h3 className="mt-1 text-[21px] font-semibold tracking-tight text-ink">{service.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{service.description}</p>
-                <span className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-blue">
+                <span className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-copper">
                   Learn more
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </span>

@@ -15,45 +15,45 @@ const companyLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#f5f5f7] text-[12px] text-muted">
+    <footer className="bg-ink text-[12px] text-white/55">
       <div className="mx-auto max-w-6xl px-5 pt-16 sm:px-6">
         <div className="flex flex-col justify-between gap-8 border-b border-line pb-10 md:flex-row md:items-end">
           <div>
-            <h3 className="text-2xl font-semibold tracking-tight text-ink md:text-3xl">
+            <h3 className="text-2xl font-semibold tracking-tight text-white md:text-3xl">
               Need it done right the first time?
             </h3>
-            <p className="mt-2 text-[15px]">Book in a minute. Or call — a person answers.</p>
+            <p className="mt-2 text-[15px] text-white/65">Book in a minute. Or call — a person answers.</p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
               href="/book"
-              className="rounded-full bg-ink px-6 py-2.5 text-center text-sm font-medium text-white hover:bg-black"
+              className="rounded-full bg-copper px-6 py-2.5 text-center text-sm font-medium text-white hover:bg-copper-dark"
             >
               Get a quote
             </Link>
             <a
               href={BUSINESS.phoneHref}
-              className="rounded-full bg-white px-6 py-2.5 text-center text-sm font-medium text-ink ring-1 ring-black/5 hover:bg-white"
+              className="rounded-full bg-white/10 px-6 py-2.5 text-center text-sm font-medium text-white ring-1 ring-white/15 hover:bg-white/15"
             >
               Call {BUSINESS.phone}
             </a>
           </div>
         </div>
 
-        <div className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-10 border-b border-white/10 py-12 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <BrandMark />
+            <BrandMark inverted />
             <p className="mt-5 max-w-xs leading-relaxed">
               Independent Houston handyman company since {BUSINESS.founded}. Bonded, insured, and guaranteed.
             </p>
           </div>
 
           <div>
-            <h4 className="mb-3 text-[12px] font-semibold text-ink">Services</h4>
+            <h4 className="mb-3 text-[12px] font-semibold text-gold">Services</h4>
             <ul className="space-y-2">
               {SERVICES.slice(0, 8).map((s) => (
                 <li key={s.id}>
-                  <Link href={`/services/${s.id}`} className="hover:text-ink">
+                  <Link href={`/services/${s.id}`} className="hover:text-white">
                     {s.title}
                   </Link>
                 </li>
@@ -62,11 +62,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-3 text-[12px] font-semibold text-ink">Company</h4>
+            <h4 className="mb-3 text-[12px] font-semibold text-gold">Company</h4>
             <ul className="space-y-2">
               {companyLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="hover:text-ink">
+                  <Link href={link.href} className="hover:text-white">
                     {link.label}
                   </Link>
                 </li>
@@ -75,15 +75,15 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-3 text-[12px] font-semibold text-ink">Contact</h4>
+            <h4 className="mb-3 text-[12px] font-semibold text-gold">Contact</h4>
             <ul className="space-y-2">
               <li>
-                <a href={BUSINESS.phoneHref} className="hover:text-ink">
+                <a href={BUSINESS.phoneHref} className="hover:text-white">
                   {BUSINESS.phone}
                 </a>
               </li>
               <li>
-                <a href={`mailto:${BUSINESS.email}`} className="hover:text-ink">
+                <a href={`mailto:${BUSINESS.email}`} className="hover:text-white">
                   {BUSINESS.email}
                 </a>
               </li>
@@ -102,16 +102,16 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col items-start justify-between gap-3 border-t border-line py-6 sm:flex-row sm:items-center">
+        <div className="flex flex-col items-start justify-between gap-3 py-6 sm:flex-row sm:items-center">
           <p>Copyright © {new Date().getFullYear()} Houston Handy Pros. All rights reserved.</p>
           <div className="flex gap-5">
-            <Link href="/privacy" className="hover:text-ink">
+            <Link href="/privacy" className="hover:text-white">
               Privacy
             </Link>
-            <Link href="/terms" className="hover:text-ink">
+            <Link href="/terms" className="hover:text-white">
               Terms
             </Link>
-            <Link href="/sitemap.xml" className="hover:text-ink">
+            <Link href="/sitemap.xml" className="hover:text-white">
               Sitemap
             </Link>
           </div>

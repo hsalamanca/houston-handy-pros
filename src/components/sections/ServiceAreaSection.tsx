@@ -21,7 +21,7 @@ export default function ServiceAreaSection() {
             {NEIGHBORHOODS.map((n) => {
               const slug = NEIGHBORHOOD_DATA.find((d) => d.name === n)?.slug;
               const className =
-                'inline-flex items-center rounded-full bg-[#f5f5f7] px-3 py-1.5 text-[13px] text-ink/80 hover:bg-[#e8e8ed]';
+                'inline-flex items-center rounded-full bg-cream px-3 py-1.5 text-[13px] text-ink/80 hover:bg-sand';
               return slug ? (
                 <Link key={n} href={`/handyman/${slug}`} className={className}>
                   {n}

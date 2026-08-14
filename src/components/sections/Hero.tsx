@@ -6,7 +6,7 @@ import QuoteForm from '@/components/forms/QuoteForm';
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[#f5f5f7]">
+    <section className="relative overflow-hidden bg-cream">
       <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-5 pb-16 pt-10 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:pb-24 lg:pt-16">
         <div>
           <p className="mb-5 text-[13px] font-medium tracking-wide text-muted">

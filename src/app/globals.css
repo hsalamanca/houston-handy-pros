@@ -1,20 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #1d1d1f;
-  --navy: #161617;
-  --copper: #86868b;
-  --copper-dark: #6e6e73;
-  --gold: #86868b;
-  --cream: #f5f5f7;
-  --sand: #e8e8ed;
-  --paper: #ffffff;
-  --forest: #1d1d1f;
-  --muted: #6e6e73;
-  --line: #d2d2d7;
-  --blue: #0071e3;
-  --background: #ffffff;
-  --foreground: #1d1d1f;
+  /* Inspired by Lowe's navy + Home Depot safety orange, not copies. */
+  --ink: #10243a;
+  --navy: #0b1c2e;
+  --copper: #e85d04;
+  --copper-dark: #c44e04;
+  --gold: #f2a100;
+  --cream: #f3eee4;
+  --sand: #e4dcce;
+  --paper: #fffcf7;
+  --forest: #2f4a3c;
+  --muted: #5c6570;
+  --line: #d8d2c6;
+  --blue: #1a4f8c;
+  --background: #fffcf7;
+  --foreground: #10243a;
 }
 
 @theme inline {
@@ -54,8 +55,8 @@ h1, h2, h3, .font-display {
 }
 
 ::selection {
-  background: #d6e7ff;
-  color: #1d1d1f;
+  background: #ffd8b8;
+  color: #10243a;
 }
 
 .section-pad {
@@ -74,26 +75,26 @@ h1, h2, h3, .font-display {
 }
 
 .soft-shadow {
-  box-shadow: 0 20px 60px -28px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 20px 60px -28px rgba(16, 36, 58, 0.22);
 }
 
 .copper-glow {
-  box-shadow: none;
+  box-shadow: 0 10px 28px -10px rgba(232, 93, 4, 0.45);
 }
 
 .field {
   width: 100%;
   border-radius: 0.9rem;
-  background: #f5f5f7;
+  background: #f3eee4;
   padding: 0.85rem 1rem;
   font-size: 0.9375rem;
-  color: #1d1d1f;
+  color: #10243a;
   outline: none;
   border: 1px solid transparent;
 }
 
 .field:focus {
-  background: #ffffff;
-  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
-  border-color: #0071e3;
+  background: #fffcf7;
+  box-shadow: 0 0 0 4px rgba(232, 93, 4, 0.18);
+  border-color: #e85d04;
 }

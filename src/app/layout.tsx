@@ -116,7 +116,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={sans.variable}>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#f5f5f7" />
+        <meta name="theme-color" content="#10243a" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}

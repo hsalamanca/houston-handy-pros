@@ -22,7 +22,7 @@ const reasons = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="section-pad bg-[#f5f5f7]">
+    <section className="section-pad bg-cream">
       <div className="mx-auto grid max-w-6xl items-center gap-16 px-5 sm:px-6 lg:grid-cols-2">
         <div className="relative">
           <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem]">

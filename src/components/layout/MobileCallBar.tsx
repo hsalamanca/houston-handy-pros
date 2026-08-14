@@ -8,14 +8,14 @@ export default function MobileCallBar() {
       <div className="grid grid-cols-2 gap-2 p-3">
         <a
           href={BUSINESS.phoneHref}
-          className="flex items-center justify-center gap-2 rounded-full bg-[#f5f5f7] py-3 text-sm font-medium text-ink"
+          className="flex items-center justify-center gap-2 rounded-full bg-cream py-3 text-sm font-medium text-ink"
         >
           <Phone className="h-4 w-4" />
           Call
         </a>
         <Link
           href="/book"
-          className="flex items-center justify-center gap-2 rounded-full bg-ink py-3 text-sm font-medium text-white"
+          className="flex items-center justify-center gap-2 rounded-full bg-copper py-3 text-sm font-medium text-white"
         >
           <CalendarCheck className="h-4 w-4" />
           Quote

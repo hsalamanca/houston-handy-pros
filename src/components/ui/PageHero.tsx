@@ -14,7 +14,7 @@ export default function PageHero({
   compact?: boolean;
 }) {
   return (
-    <section className={cn('bg-[#f5f5f7] text-ink', compact ? 'py-16 md:py-20' : 'py-20 md:py-28')}>
+    <section className={cn('bg-cream text-ink', compact ? 'py-16 md:py-20' : 'py-20 md:py-28')}>
       <div className="mx-auto max-w-3xl px-5 text-center sm:px-6">
         {eyebrow && (
           <p className="mb-4 text-[13px] font-medium tracking-wide text-muted">{eyebrow}</p>

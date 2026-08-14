@@ -5,13 +5,13 @@ type Variant = 'primary' | 'secondary' | 'ghost' | 'outline';
 
 const styles: Record<Variant, string> = {
   primary:
-    'bg-ink text-white hover:bg-black',
+    'bg-copper text-white hover:bg-copper-dark copper-glow',
   secondary:
-    'bg-[#f5f5f7] text-ink hover:bg-[#e8e8ed]',
+    'bg-ink text-white hover:bg-navy',
   ghost:
     'bg-white/10 text-white backdrop-blur-md hover:bg-white/20',
   outline:
-    'border border-line bg-transparent text-ink hover:bg-[#f5f5f7]',
+    'border border-line bg-transparent text-ink hover:bg-cream',
 };
 
 export default function Button({
