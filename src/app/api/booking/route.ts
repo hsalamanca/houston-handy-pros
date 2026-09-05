@@ -1,3 +1,4 @@
+import { checkBotId } from 'botid/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export interface BookingPayload {
@@ -106,6 +107,11 @@ async function saveToDatabase(booking: BookingPayload) {
 }
 
 export async function POST(req: NextRequest) {
+  const verification = await checkBotId();
+  if (verification.isBot) {
+    return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+  }
+
   try {
     const booking: BookingPayload = await req.json();
 
