@@ -10,16 +10,25 @@ export default function DbBanner({ ok, message }: { ok: boolean; message: string
         <p className="font-semibold">Database is offline — new requests are still emailed and texted to you.</p>
         <p className="mt-1 text-orange-800">{message}</p>
         <p className="mt-2">
-          Restore the project at{' '}
+          Create or open the project in{' '}
           <a
-            href="https://supabase.com/dashboard/project/ajgmichfufztwwypepax"
+            href="https://console.neon.tech/app/projects"
             className="underline font-semibold"
             target="_blank"
             rel="noreferrer"
           >
-            Supabase → Houston Handy Pros
+            Neon
           </a>
-          , then run <code className="bg-white px-1 rounded">supabase/schema.sql</code>.
+          , copy the pooled connection string, then paste it as <code className="bg-white px-1 rounded">DATABASE_URL</code> in{' '}
+          <a
+            href="https://vercel.com/huguinho/houston-handy-pros/settings/environment-variables"
+            className="underline font-semibold"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Vercel env vars
+          </a>
+          . Tables are created automatically on the next request.
         </p>
       </div>
     </div>
@@ -34,7 +43,7 @@ export function LivePill({ ok }: { ok: boolean }) {
       }`}
     >
       {ok ? <CheckCircle className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
-      {ok ? 'Live data' : 'Demo offline'}
+      {ok ? 'Live Neon' : 'DB offline'}
     </span>
   );
 }
