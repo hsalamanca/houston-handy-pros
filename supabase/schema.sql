@@ -1,5 +1,7 @@
 -- Houston Handy Pros — Supabase Schema
--- Run this in the Supabase SQL Editor to set up all tables
+-- 1. Restore the paused project: https://supabase.com/dashboard/project/ajgmichfufztwwypepax
+-- 2. Run this entire file in the SQL Editor
+-- Public forms INSERT via the API using SUPABASE_SERVICE_ROLE_KEY (never the anon key in the browser).
 
 -- ─── BOOKINGS ────────────────────────────────────────────────────────────────
 create table if not exists public.bookings (
@@ -18,11 +20,13 @@ create table if not exists public.bookings (
   assigned_tech    text,
   notes            text,
   amount           numeric(10,2),
+  source           text default 'book',
   created_at       timestamptz default now(),
   updated_at       timestamptz default now()
 );
 
--- Auto-update updated_at
+alter table public.bookings add column if not exists source text default 'book';
+
 create or replace function public.set_updated_at()
 returns trigger language plpgsql as $$
 begin
@@ -31,6 +35,7 @@ begin
 end;
 $$;
 
+drop trigger if exists bookings_updated_at on public.bookings;
 create trigger bookings_updated_at
   before update on public.bookings
   for each row execute procedure public.set_updated_at();
@@ -56,14 +61,19 @@ create table if not exists public.contact_messages (
   phone      text,
   service    text,
   message    text not null,
+  source     text default 'contact',
   created_at timestamptz default now()
 );
 
+alter table public.contact_messages add column if not exists source text default 'contact';
+
 -- ─── ROW LEVEL SECURITY ──────────────────────────────────────────────────────
--- Public can INSERT bookings and contact messages (for the booking form)
 alter table public.bookings enable row level security;
 alter table public.customers enable row level security;
 alter table public.contact_messages enable row level security;
+
+drop policy if exists "Anyone can create a booking" on public.bookings;
+drop policy if exists "Anyone can create a contact message" on public.contact_messages;
 
 create policy "Anyone can create a booking"
   on public.bookings for insert
@@ -73,11 +83,9 @@ create policy "Anyone can create a contact message"
   on public.contact_messages for insert
   with check (true);
 
--- Only service role (your backend) can read/update — enforced by using
--- SUPABASE_SERVICE_ROLE_KEY in the API routes, never the anon key.
-
 -- ─── INDEXES ─────────────────────────────────────────────────────────────────
 create index if not exists bookings_status_idx      on public.bookings (status);
 create index if not exists bookings_email_idx       on public.bookings (customer_email);
 create index if not exists bookings_created_at_idx  on public.bookings (created_at desc);
 create index if not exists customers_email_idx      on public.customers (email);
+create index if not exists leads_created_at_idx     on public.contact_messages (created_at desc);

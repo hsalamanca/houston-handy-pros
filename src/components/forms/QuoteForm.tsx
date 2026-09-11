@@ -30,6 +30,7 @@ export default function QuoteForm({ compact = false }: { compact?: boolean }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
+          source: 'quote',
           message: form.message || `Quote request for ${form.service || 'handyman service'}`,
         }),
       });

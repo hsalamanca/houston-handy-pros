@@ -1,0 +1,68 @@
+import type { Metadata } from 'next';
+import { Mail, Phone } from 'lucide-react';
+import AdminHeader from '@/components/admin/AdminHeader';
+import DbBanner, { LivePill } from '@/components/admin/DbBanner';
+import { listLeads, probeDatabase } from '@/lib/db';
+
+export const metadata: Metadata = { title: 'Website Leads | Admin', robots: { index: false, follow: false } };
+export const dynamic = 'force-dynamic';
+
+export default async function LeadsPage() {
+  const probe = await probeDatabase();
+  const leads = probe.ok ? await listLeads().catch(() => []) : [];
+
+  return (
+    <div>
+      <AdminHeader current="/admin/leads" />
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-black text-[#1B2A4A]">Website Leads</h1>
+            <LivePill ok={probe.ok} />
+          </div>
+          <span className="text-gray-500 text-sm">{leads.length} messages</span>
+        </div>
+        <DbBanner ok={probe.ok} message={probe.message} />
+
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+          {leads.length === 0 ? (
+            <p className="px-6 py-10 text-sm text-gray-500">
+              Quote and contact form messages land here. You also get an email and text for every one.
+            </p>
+          ) : (
+            <div className="divide-y">
+              {leads.map((lead) => (
+                <div key={lead.id} className="px-6 py-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="font-bold text-[#1B2A4A]">{lead.name}</p>
+                      <p className="text-[#F5A623] text-xs font-semibold mt-0.5">
+                        {lead.service || 'General inquiry'} · {lead.source || 'contact'}
+                      </p>
+                    </div>
+                    <p className="text-gray-400 text-xs shrink-0">
+                      {new Date(lead.created_at).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-4 mt-2 text-xs text-gray-600">
+                    <a href={`mailto:${lead.email}`} className="inline-flex items-center gap-1 hover:text-[#1B2A4A]">
+                      <Mail className="w-3 h-3" />
+                      {lead.email}
+                    </a>
+                    {lead.phone && (
+                      <a href={`tel:${lead.phone}`} className="inline-flex items-center gap-1 hover:text-[#1B2A4A]">
+                        <Phone className="w-3 h-3" />
+                        {lead.phone}
+                      </a>
+                    )}
+                  </div>
+                  <p className="mt-3 text-sm text-gray-700 whitespace-pre-wrap">{lead.message}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
