@@ -153,7 +153,7 @@ export async function probeDatabase(): Promise<{ ok: boolean; message: string }>
     return {
       ok: false,
       message:
-        'DATABASE_URL is not set. Create a Neon project named houston-handy-pros, copy the pooled connection string, and add it as DATABASE_URL on Vercel (Production + Preview).',
+        'DATABASE_URL is not set. Connect Neon Postgres in Vercel → Storage for this project, then redeploy.',
     };
   }
   try {
