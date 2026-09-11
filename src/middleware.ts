@@ -17,7 +17,8 @@ export function middleware(req: NextRequest) {
 
   const isAdminRoute =
     (pathname.startsWith('/admin') && !pathname.startsWith('/admin-login')) ||
-    pathname.startsWith('/portal');
+    pathname.startsWith('/portal') ||
+    (pathname.startsWith('/api/admin') && !pathname.startsWith('/api/admin-logout'));
 
   if (!isAdminRoute) return NextResponse.next();
 
@@ -33,6 +34,10 @@ export function middleware(req: NextRequest) {
   }
 
   if (hasAdminCookie) return NextResponse.next();
+
+  if (pathname.startsWith('/api/admin')) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   const loginUrl = req.nextUrl.clone();
   loginUrl.pathname = '/admin-login';
