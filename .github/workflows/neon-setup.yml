@@ -1,0 +1,66 @@
+name: Neon setup
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Connect Neon and apply schema
+        env:
+          NEON_API_KEY: ${{ secrets.NEON_API_KEY }}
+          NEON_PROJECT_ID: ${{ vars.NEON_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NEON_API_KEY:-}" ]; then
+            echo "::error::This repo does not have NEON_API_KEY. In Neon Console → Integrations → GitHub, connect houston-handy-pros to hsalamanca/houston-handy-pros."
+            exit 1
+          fi
+
+          npx neon@latest me -o json
+          PROJECTS_JSON=$(npx neon@latest projects list -o json)
+          echo "$PROJECTS_JSON"
+
+          PROJECT_ID="${NEON_PROJECT_ID:-}"
+          if [ -z "$PROJECT_ID" ]; then
+            PROJECT_ID=$(node -e '
+              const data = JSON.parse(process.argv[1]);
+              const list = Array.isArray(data) ? data : (data.projects || data.items || []);
+              const hit = list.find((p) => (p.name || p.project?.name || "") === "houston-handy-pros");
+              process.stdout.write(hit?.id || hit?.project?.id || "");
+            ' "$PROJECTS_JSON")
+          fi
+
+          if [ -z "$PROJECT_ID" ]; then
+            echo "Creating Neon project houston-handy-pros"
+            CREATE_JSON=$(npx neon@latest projects create --name houston-handy-pros --region-id aws-us-east-1 -o json)
+            echo "$CREATE_JSON"
+            PROJECT_ID=$(node -e '
+              const data = JSON.parse(process.argv[1]);
+              const id = data.project?.id || data.id || "";
+              if (!id) { console.error("Could not parse project id"); process.exit(1); }
+              process.stdout.write(id);
+            ' "$CREATE_JSON")
+          fi
+
+          echo "Using Neon project $PROJECT_ID"
+          echo "NEON_PROJECT_ID=$PROJECT_ID" >> "$GITHUB_STEP_SUMMARY"
+          echo "Console: https://console.neon.tech/app/projects/$PROJECT_ID" >> "$GITHUB_STEP_SUMMARY"
+
+          DATABASE_URL=$(npx neon@latest connection-string --project-id "$PROJECT_ID" --pooled)
+          echo "::add-mask::$DATABASE_URL"
+          export DATABASE_URL
+          node scripts/apply-neon-schema.mjs
+
