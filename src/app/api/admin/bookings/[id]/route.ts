@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isAdminRequest, unauthorized } from '@/lib/admin-auth';
-import { updateBooking } from '@/lib/db';
+import { getBooking, updateBooking } from '@/lib/db';
 import type { BookingStatus } from '@/lib/types';
 
 const STATUSES: BookingStatus[] = ['new', 'scheduled', 'in_progress', 'complete', 'cancelled'];
+
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  if (!isAdminRequest(req)) return unauthorized();
+  const { id } = await params;
+  const booking = await getBooking(id);
+  if (!booking) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  return NextResponse.json({ booking });
+}
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isAdminRequest(req)) return unauthorized();

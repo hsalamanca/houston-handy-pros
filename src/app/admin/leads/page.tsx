@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { Mail, Phone } from 'lucide-react';
+import Link from 'next/link';
+import { Mail, Phone, ChevronRight } from 'lucide-react';
 import AdminHeader from '@/components/admin/AdminHeader';
 import DbBanner, { LivePill } from '@/components/admin/DbBanner';
 import { listLeads, probeDatabase } from '@/lib/db';
@@ -32,7 +33,11 @@ export default async function LeadsPage() {
           ) : (
             <div className="divide-y">
               {leads.map((lead) => (
-                <div key={lead.id} className="px-6 py-5">
+                <Link
+                  key={lead.id}
+                  href={`/admin/leads/${lead.id}`}
+                  className="block px-6 py-5 hover:bg-[#F8F9FA] transition-colors"
+                >
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <p className="font-bold text-[#1B2A4A]">{lead.name}</p>
@@ -40,24 +45,25 @@ export default async function LeadsPage() {
                         {lead.service || 'General inquiry'} · {lead.source || 'contact'}
                       </p>
                     </div>
-                    <p className="text-gray-400 text-xs shrink-0">
-                      {new Date(lead.created_at).toLocaleString()}
-                    </p>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <p className="text-gray-400 text-xs">{new Date(lead.created_at).toLocaleString()}</p>
+                      <ChevronRight className="w-4 h-4 text-gray-300" />
+                    </div>
                   </div>
                   <div className="flex flex-wrap gap-4 mt-2 text-xs text-gray-600">
-                    <a href={`mailto:${lead.email}`} className="inline-flex items-center gap-1 hover:text-[#1B2A4A]">
+                    <span className="inline-flex items-center gap-1">
                       <Mail className="w-3 h-3" />
                       {lead.email}
-                    </a>
+                    </span>
                     {lead.phone && (
-                      <a href={`tel:${lead.phone}`} className="inline-flex items-center gap-1 hover:text-[#1B2A4A]">
+                      <span className="inline-flex items-center gap-1">
                         <Phone className="w-3 h-3" />
                         {lead.phone}
-                      </a>
+                      </span>
                     )}
                   </div>
-                  <p className="mt-3 text-sm text-gray-700 whitespace-pre-wrap">{lead.message}</p>
-                </div>
+                  <p className="mt-3 text-sm text-gray-700 line-clamp-2">{lead.message}</p>
+                </Link>
               ))}
             </div>
           )}

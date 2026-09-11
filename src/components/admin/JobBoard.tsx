@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Phone, MapPin, Clock } from 'lucide-react';
+import Link from 'next/link';
+import { Phone, MapPin, Clock, ChevronRight } from 'lucide-react';
 import type { Booking, BookingStatus } from '@/lib/types';
 
 const columns: { id: BookingStatus; label: string; color: string }[] = [
@@ -76,49 +77,61 @@ export default function JobBoard({ initial }: { initial: Booking[] }) {
                 </div>
                 <div className="space-y-3">
                   {colJobs.map((job) => (
-                    <div
+                    <article
                       key={job.id}
-                      className={`bg-white rounded-xl p-4 shadow-sm border border-gray-100 ${
+                      className={`relative bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-[#F5A623]/60 hover:shadow-md transition-all ${
                         pending === job.id ? 'opacity-60' : ''
                       }`}
                     >
-                      <div className="flex items-start justify-between mb-2 gap-2">
-                        <div>
-                          <p className="font-bold text-[#1B2A4A] text-sm">{job.customer_name}</p>
-                          <p className="text-[#F5A623] text-xs font-semibold">{job.service}</p>
-                        </div>
-                        {job.amount != null && (
-                          <span className="text-[#1B2A4A] font-black text-sm">{money(job.amount)}</span>
-                        )}
-                      </div>
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-1.5 text-gray-500 text-xs">
-                          <Clock className="w-3 h-3" />
-                          {when(job)}
-                        </div>
-                        {job.address && (
-                          <div className="flex items-center gap-1.5 text-gray-500 text-xs">
-                            <MapPin className="w-3 h-3" />
-                            {job.address}
+                      <Link
+                        href={`/admin/jobs/${job.id}`}
+                        className="absolute inset-0 z-0 rounded-xl"
+                        aria-label={`Open job for ${job.customer_name}`}
+                      />
+                      <div className="relative z-10 pointer-events-none">
+                        <div className="flex items-start justify-between mb-2 gap-2">
+                          <div>
+                            <p className="font-bold text-[#1B2A4A] text-sm">{job.customer_name}</p>
+                            <p className="text-[#F5A623] text-xs font-semibold">{job.service}</p>
                           </div>
-                        )}
-                        {job.customer_phone && (
-                          <a
-                            href={`tel:${job.customer_phone}`}
-                            className="flex items-center gap-1.5 text-gray-500 text-xs hover:text-[#1B2A4A]"
-                          >
-                            <Phone className="w-3 h-3" />
-                            {job.customer_phone}
-                          </a>
+                          <div className="flex items-center gap-1 shrink-0">
+                            {job.amount != null && (
+                              <span className="text-[#1B2A4A] font-black text-sm">{money(job.amount)}</span>
+                            )}
+                            <ChevronRight className="w-4 h-4 text-gray-300" />
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-1.5 text-gray-500 text-xs">
+                            <Clock className="w-3 h-3" />
+                            {when(job)}
+                          </div>
+                          {job.address && (
+                            <div className="flex items-center gap-1.5 text-gray-500 text-xs">
+                              <MapPin className="w-3 h-3" />
+                              {job.address}
+                            </div>
+                          )}
+                        </div>
+                        {job.description && (
+                          <p className="text-gray-500 text-xs mt-2 line-clamp-3">{job.description}</p>
                         )}
                       </div>
-                      {job.description && (
-                        <p className="text-gray-500 text-xs mt-2 line-clamp-3">{job.description}</p>
+                      {job.customer_phone && (
+                        <a
+                          href={`tel:${job.customer_phone}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="relative z-10 mt-2 flex items-center gap-1.5 text-gray-500 text-xs hover:text-[#1B2A4A]"
+                        >
+                          <Phone className="w-3 h-3" />
+                          {job.customer_phone}
+                        </a>
                       )}
                       <select
-                        className="mt-3 w-full text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-[#F8F9FA]"
+                        className="relative z-10 mt-3 w-full text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-[#F8F9FA]"
                         value={job.status}
                         disabled={pending === job.id}
+                        onClick={(e) => e.stopPropagation()}
                         onChange={(e) => setStatus(job.id, e.target.value as BookingStatus)}
                       >
                         {columns.map((c) => (
@@ -128,7 +141,7 @@ export default function JobBoard({ initial }: { initial: Booking[] }) {
                         ))}
                         <option value="cancelled">Cancelled</option>
                       </select>
-                    </div>
+                    </article>
                   ))}
                 </div>
               </div>

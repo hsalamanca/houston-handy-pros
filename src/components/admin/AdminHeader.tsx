@@ -21,7 +21,9 @@ export default function AdminHeader({ current }: { current: string }) {
               key={link.href}
               href={link.href}
               className={`text-sm whitespace-nowrap ${
-                current === link.href ? 'text-white font-semibold' : 'text-white/70 hover:text-white'
+                (link.href === '/admin' ? current === '/admin' : current === link.href || current.startsWith(`${link.href}/`))
+                  ? 'text-white font-semibold'
+                  : 'text-white/70 hover:text-white'
               }`}
             >
               {link.label}

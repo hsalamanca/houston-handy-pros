@@ -137,7 +137,11 @@ export default async function AdminDashboard() {
             ) : (
               <div className="divide-y">
                 {recent.map((booking) => (
-                  <div key={booking.id} className="flex items-center gap-4 px-6 py-4 hover:bg-[#F8F9FA] transition-colors">
+                  <Link
+                    key={booking.id}
+                    href={`/admin/jobs/${booking.id}`}
+                    className="flex items-center gap-4 px-6 py-4 hover:bg-[#F8F9FA] transition-colors"
+                  >
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-[#1B2A4A] text-sm truncate">{booking.customer_name}</p>
                       <p className="text-gray-500 text-xs">
@@ -155,7 +159,7 @@ export default async function AdminDashboard() {
                     <span className={`text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${statusStyles[booking.status]}`}>
                       {statusLabels[booking.status] ?? booking.status}
                     </span>
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}

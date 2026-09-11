@@ -169,6 +169,28 @@ export async function probeDatabase(): Promise<{ ok: boolean; message: string }>
   }
 }
 
+export async function getBooking(id: string): Promise<Booking | null> {
+  await ensureSchema();
+  try {
+    const rows = await sql()`SELECT * FROM bookings WHERE id = ${id}::uuid LIMIT 1`;
+    const row = (rows as Record<string, unknown>[])[0];
+    return row ? asBooking(row) : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getLead(id: string): Promise<Lead | null> {
+  await ensureSchema();
+  try {
+    const rows = await sql()`SELECT * FROM contact_messages WHERE id = ${id}::uuid LIMIT 1`;
+    const row = (rows as Record<string, unknown>[])[0];
+    return row ? asLead(row) : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function listBookings(): Promise<Booking[]> {
   await ensureSchema();
   const rows = await sql()`SELECT * FROM bookings ORDER BY created_at DESC LIMIT 500`;
