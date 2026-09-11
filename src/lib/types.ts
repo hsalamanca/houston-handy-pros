@@ -1,5 +1,12 @@
 export type BookingStatus = 'new' | 'scheduled' | 'in_progress' | 'complete' | 'cancelled';
 
+export type QuoteLine = {
+  id: string;
+  description: string;
+  quantity: number;
+  unit_price: number;
+};
+
 export type Booking = {
   id: string;
   service: string;
@@ -15,6 +22,7 @@ export type Booking = {
   assigned_tech: string | null;
   notes: string | null;
   amount: number | null;
+  quote_items: QuoteLine[];
   source: string | null;
   created_at: string;
   updated_at: string;
@@ -28,6 +36,8 @@ export type Lead = {
   service: string | null;
   message: string;
   source: string | null;
+  quote_items: QuoteLine[];
+  quoted_amount: number | null;
   created_at: string;
 };
 

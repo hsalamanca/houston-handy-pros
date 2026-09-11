@@ -15,6 +15,7 @@ export default function QuoteForm({ compact = false }: { compact?: boolean }) {
     email: '',
     service: '',
     message: '',
+    website: '',
   });
 
   const update = (key: keyof typeof form, value: string) =>
@@ -63,7 +64,7 @@ export default function QuoteForm({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
+    <form onSubmit={handleSubmit} className="relative space-y-3">
       {!compact && (
         <div>
           <p className="font-display text-2xl text-ink">Get a free quote</p>
@@ -94,6 +95,18 @@ export default function QuoteForm({ compact = false }: { compact?: boolean }) {
         onChange={(e) => update('email', e.target.value)}
         className="field"
       />
+      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label>
+          Website
+          <input
+            tabIndex={-1}
+            autoComplete="off"
+            name="website"
+            value={form.website}
+            onChange={(e) => update('website', e.target.value)}
+          />
+        </label>
+      </div>
       <select
         required
         value={form.service}

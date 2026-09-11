@@ -1,5 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import type { Booking, BookingStatus, Customer, Lead } from '@/lib/types';
+import { parseQuoteItems, quoteTotal } from '@/lib/quote';
 
 export type { Booking, BookingStatus, Customer, Lead };
 
@@ -97,6 +98,9 @@ async function applySchema(): Promise<void> {
   await q`CREATE INDEX IF NOT EXISTS bookings_created_at_idx ON bookings (created_at DESC)`;
   await q`CREATE INDEX IF NOT EXISTS customers_email_idx ON customers (email)`;
   await q`CREATE INDEX IF NOT EXISTS leads_created_at_idx ON contact_messages (created_at DESC)`;
+  await q`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS quote_items jsonb NOT NULL DEFAULT '[]'::jsonb`;
+  await q`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS quote_items jsonb NOT NULL DEFAULT '[]'::jsonb`;
+  await q`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS quoted_amount numeric(10,2)`;
 }
 
 function asBooking(row: Record<string, unknown>): Booking {
@@ -115,6 +119,7 @@ function asBooking(row: Record<string, unknown>): Booking {
     assigned_tech: row.assigned_tech == null ? null : String(row.assigned_tech),
     notes: row.notes == null ? null : String(row.notes),
     amount: row.amount == null || row.amount === '' ? null : Number(row.amount),
+    quote_items: parseQuoteItems(row.quote_items),
     source: row.source == null ? null : String(row.source),
     created_at: String(row.created_at ?? ''),
     updated_at: String(row.updated_at ?? row.created_at ?? ''),
@@ -130,6 +135,8 @@ function asLead(row: Record<string, unknown>): Lead {
     service: row.service == null ? null : String(row.service),
     message: String(row.message ?? ''),
     source: row.source == null ? null : String(row.source),
+    quote_items: parseQuoteItems(row.quote_items),
+    quoted_amount: row.quoted_amount == null || row.quoted_amount === '' ? null : Number(row.quoted_amount),
     created_at: String(row.created_at ?? ''),
   };
 }
@@ -295,15 +302,19 @@ export async function upsertCustomer(input: {
 
 export async function updateBooking(
   id: string,
-  patch: Partial<Pick<Booking, 'status' | 'notes' | 'assigned_tech' | 'amount'>>,
+  patch: Partial<Pick<Booking, 'status' | 'notes' | 'assigned_tech' | 'amount' | 'quote_items'>>,
 ): Promise<Booking> {
   await ensureSchema();
+  const items = patch.quote_items ? parseQuoteItems(patch.quote_items) : null;
+  const itemsJson = items ? JSON.stringify(items) : null;
+  const amount = items ? quoteTotal(items) : patch.amount ?? null;
   const rows = await sql()`
     UPDATE bookings SET
       status = COALESCE(${patch.status ?? null}, status),
       notes = COALESCE(${patch.notes ?? null}, notes),
       assigned_tech = COALESCE(${patch.assigned_tech ?? null}, assigned_tech),
-      amount = COALESCE(${patch.amount ?? null}, amount),
+      amount = COALESCE(${amount}, amount),
+      quote_items = COALESCE(CAST(${itemsJson} AS jsonb), quote_items),
       updated_at = now()
     WHERE id = ${id}::uuid
     RETURNING *
@@ -311,4 +322,24 @@ export async function updateBooking(
   const row = (rows as Record<string, unknown>[])[0];
   if (!row?.id) throw new DbError('Booking not found', 404);
   return asBooking(row);
+}
+
+export async function updateLead(
+  id: string,
+  patch: Partial<Pick<Lead, 'quote_items' | 'quoted_amount'>>,
+): Promise<Lead> {
+  await ensureSchema();
+  const items = patch.quote_items ? parseQuoteItems(patch.quote_items) : null;
+  const itemsJson = items ? JSON.stringify(items) : null;
+  const amount = items ? quoteTotal(items) : patch.quoted_amount ?? null;
+  const rows = await sql()`
+    UPDATE contact_messages SET
+      quote_items = COALESCE(CAST(${itemsJson} AS jsonb), quote_items),
+      quoted_amount = COALESCE(${amount}, quoted_amount)
+    WHERE id = ${id}::uuid
+    RETURNING *
+  `;
+  const row = (rows as Record<string, unknown>[])[0];
+  if (!row?.id) throw new DbError('Lead not found', 404);
+  return asLead(row);
 }

@@ -1,9 +1,13 @@
 import { checkBotId } from 'botid/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { insertLead, upsertCustomer } from '@/lib/db';
-import { notifyCustomerLead, notifyOwnerNewLead, type LeadNotice } from '@/lib/notify';
+import { notifyCustomerLead, notifyOwnerNewLead } from '@/lib/notify';
+import { allowedOrigin, parsePublicLead, tooLarge } from '@/lib/validate';
 
 export async function POST(req: NextRequest) {
+  if (!allowedOrigin(req)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (tooLarge(req)) return NextResponse.json({ error: 'Request too large' }, { status: 413 });
+
   const verification = await checkBotId();
   if (verification.isBot) {
     return NextResponse.json({ error: 'Access denied' }, { status: 403 });
@@ -11,18 +15,18 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const lead: LeadNotice = {
-      name: String(body.name ?? '').trim(),
-      email: String(body.email ?? '').trim(),
-      phone: String(body.phone ?? '').trim(),
-      service: String(body.service ?? '').trim(),
-      message: String(body.message ?? '').trim() || 'Quote request from the website form.',
-      source: String(body.source ?? 'contact'),
-    };
+    const parsed = parsePublicLead(body);
+    if ('honeypot' in parsed) return NextResponse.json({ success: true, persisted: true });
+    if ('error' in parsed) return NextResponse.json({ error: parsed.error }, { status: 400 });
 
-    if (!lead.name || !lead.email) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
+    const lead = {
+      name: parsed.name,
+      email: parsed.email,
+      phone: parsed.phone,
+      service: parsed.service,
+      message: parsed.message || 'Quote request from the website form.',
+      source: parsed.source,
+    };
 
     const ownerNotified = await notifyOwnerNewLead(lead).catch((err) => {
       console.error('Owner lead notify failed:', err);

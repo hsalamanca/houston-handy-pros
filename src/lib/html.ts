@@ -15,3 +15,7 @@ export function toE164(phone: string | null | undefined): string | null {
   if (phone.trim().startsWith('+') && digits.length >= 10) return `+${digits}`;
   return null;
 }
+
+export function clip(value: unknown, max: number): string {
+  return String(value ?? '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').trim().slice(0, max);
+}

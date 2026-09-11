@@ -5,7 +5,7 @@ import { listBookings } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-  if (!isAdminRequest(req)) return unauthorized();
+  if (!(await isAdminRequest(req))) return unauthorized();
   try {
     const bookings = await listBookings();
     return NextResponse.json({ bookings });

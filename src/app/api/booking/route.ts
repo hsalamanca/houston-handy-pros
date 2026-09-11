@@ -1,33 +1,36 @@
 import { checkBotId } from 'botid/server';
 import { NextRequest, NextResponse } from 'next/server';
 import { insertBooking, upsertCustomer } from '@/lib/db';
-import { notifyCustomerBooking, notifyOwnerNewBooking, type BookingNotice } from '@/lib/notify';
+import { notifyCustomerBooking, notifyOwnerNewBooking } from '@/lib/notify';
+import { allowedOrigin, parsePublicBooking, tooLarge } from '@/lib/validate';
 
 export async function POST(req: NextRequest) {
+  if (!allowedOrigin(req)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (tooLarge(req)) return NextResponse.json({ error: 'Request too large' }, { status: 413 });
+
   const verification = await checkBotId();
   if (verification.isBot) {
     return NextResponse.json({ error: 'Access denied' }, { status: 403 });
   }
 
   try {
-    const body = (await req.json()) as Partial<BookingNotice>;
-    const booking: BookingNotice = {
-      service: String(body.service ?? '').trim(),
-      description: String(body.description ?? '').trim(),
-      date: String(body.date ?? '').trim(),
-      time: String(body.time ?? '').trim(),
-      address: String(body.address ?? '').trim(),
-      name: String(body.name ?? '').trim(),
-      email: String(body.email ?? '').trim(),
-      phone: String(body.phone ?? '').trim(),
-      isEmergency: Boolean(body.isEmergency),
+    const body = await req.json();
+    const parsed = parsePublicBooking(body);
+    if ('honeypot' in parsed) return NextResponse.json({ success: true, persisted: true });
+    if ('error' in parsed) return NextResponse.json({ error: parsed.error }, { status: 400 });
+
+    const booking = {
+      service: parsed.service,
+      description: parsed.description,
+      date: parsed.date,
+      time: parsed.time,
+      address: parsed.address,
+      name: parsed.name,
+      email: parsed.email,
+      phone: parsed.phone,
+      isEmergency: parsed.isEmergency,
     };
 
-    if (!booking.service || !booking.name || !booking.email || !booking.phone) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
-    }
-
-    // Owner notify first so a paused database cannot drop the lead.
     const ownerNotified = await notifyOwnerNewBooking(booking).catch((err) => {
       console.error('Owner booking notify failed:', err);
       return false;

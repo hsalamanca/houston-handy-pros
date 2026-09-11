@@ -4,6 +4,7 @@ import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Mail, Phone, MapPin, Clock, AlertTriangle } from 'lucide-react';
 import type { Booking, BookingStatus } from '@/lib/types';
+import QuoteEditor from '@/components/admin/QuoteEditor';
 
 const STATUSES: { id: BookingStatus; label: string }[] = [
   { id: 'new', label: 'New' },
@@ -154,6 +155,8 @@ export default function JobDetail({ initial }: { initial: Booking }) {
             {saving ? 'Saving…' : 'Save details'}
           </button>
         </form>
+
+        <QuoteEditor kind="booking" id={job.id} initialItems={job.quote_items || []} />
       </div>
 
       <aside className="space-y-4">

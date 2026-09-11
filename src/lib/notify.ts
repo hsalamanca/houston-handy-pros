@@ -205,3 +205,51 @@ export async function notifyCustomerLead(lead: LeadNotice): Promise<void> {
     html: `<p>Hi ${escapeHtml(lead.name)},</p><p>Thanks for reaching out! We'll get back to you within a few hours. For faster service, call us at (832) 215-0668.</p><p>— The Houston Handy Pros Team</p>`,
   });
 }
+
+export async function sendCustomerQuote(opts: {
+  name: string;
+  email: string;
+  service: string;
+  address: string | null;
+  items: { description: string; quantity: number; unit_price: number }[];
+  total: number;
+}): Promise<boolean> {
+  const rows = opts.items
+    .map((item) => {
+      const line = item.quantity * item.unit_price;
+      return `<tr>
+        <td style="padding:8px 0;border-bottom:1px solid #E5E7EB;color:#1B2A4A;">${escapeHtml(item.description)}</td>
+        <td style="padding:8px 0;border-bottom:1px solid #E5E7EB;text-align:right;color:#6B7280;">${item.quantity}</td>
+        <td style="padding:8px 0;border-bottom:1px solid #E5E7EB;text-align:right;color:#6B7280;">$${item.unit_price.toFixed(2)}</td>
+        <td style="padding:8px 0;border-bottom:1px solid #E5E7EB;text-align:right;font-weight:600;color:#1B2A4A;">$${line.toFixed(2)}</td>
+      </tr>`;
+    })
+    .join('');
+
+  return sendEmail({
+    to: opts.email,
+    subject: `Your Houston Handy Pros quote — ${opts.service}`,
+    html: wrap(
+      'Your quote',
+      `
+        <p style="color:#374151;">Hi <strong>${escapeHtml(opts.name)}</strong>,</p>
+        <p style="color:#374151;">Here is the quote for <strong>${escapeHtml(opts.service)}</strong>.</p>
+        ${opts.address ? `<p style="color:#6B7280;font-size:14px;">Job address: ${escapeHtml(opts.address)}</p>` : ''}
+        <table style="width:100%;border-collapse:collapse;margin:24px 0;">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding:8px 0;color:#6B7280;font-size:12px;text-transform:uppercase;">Item</th>
+              <th style="text-align:right;padding:8px 0;color:#6B7280;font-size:12px;text-transform:uppercase;">Qty</th>
+              <th style="text-align:right;padding:8px 0;color:#6B7280;font-size:12px;text-transform:uppercase;">Price</th>
+              <th style="text-align:right;padding:8px 0;color:#6B7280;font-size:12px;text-transform:uppercase;">Total</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <p style="font-size:20px;font-weight:800;color:#1B2A4A;">Total ${escapeHtml(`$${opts.total.toFixed(2)}`)}</p>
+        <p style="color:#374151;font-size:14px;">This quote is good for 14 days. Call or reply to approve and we’ll get you on the schedule.</p>
+        <p style="color:#374151;font-size:14px;">(832) 215-0668 · houstonhandypros.com</p>
+      `,
+    ),
+  });
+}

@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: '*', allow: '/', disallow: ['/admin/', '/api/'] },
+    rules: { userAgent: '*', allow: '/', disallow: ['/admin/', '/admin-login', '/api/', '/portal'] },
     sitemap: 'https://houstonhandypros.com/sitemap.xml',
   };
 }

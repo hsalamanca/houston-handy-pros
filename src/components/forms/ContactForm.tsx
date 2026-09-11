@@ -15,6 +15,7 @@ export default function ContactForm() {
     phone: '',
     service: '',
     message: '',
+    website: '',
   });
 
   const update = (k: keyof typeof form, v: string) => setForm((f) => ({ ...f, [k]: v }));
@@ -51,8 +52,20 @@ export default function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="relative space-y-4">
       <h2 className="font-display text-2xl text-ink">Send a message</h2>
+      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label>
+          Website
+          <input
+            tabIndex={-1}
+            autoComplete="off"
+            name="website"
+            value={form.website}
+            onChange={(e) => update('website', e.target.value)}
+          />
+        </label>
+      </div>
       {[
         { label: 'Full name', key: 'name' as const, type: 'text', placeholder: 'Jane Smith' },
         { label: 'Email', key: 'email' as const, type: 'email', placeholder: 'jane@example.com' },

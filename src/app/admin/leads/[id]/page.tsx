@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { Mail, Phone } from 'lucide-react';
 import AdminHeader from '@/components/admin/AdminHeader';
-import { getLead, insertBooking, upsertCustomer } from '@/lib/db';
+import QuoteEditor from '@/components/admin/QuoteEditor';
+import { getLead, insertBooking, updateBooking, upsertCustomer } from '@/lib/db';
 
 export const metadata: Metadata = { title: 'Lead | Admin', robots: { index: false, follow: false } };
 export const dynamic = 'force-dynamic';
@@ -29,6 +30,9 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
       is_emergency: false,
       source: current.source === 'quote' ? 'quote' : 'lead',
     });
+    if (current.quote_items.length) {
+      await updateBooking(job.id, { quote_items: current.quote_items }).catch(() => undefined);
+    }
     await upsertCustomer({
       name: current.name,
       email: current.email,
@@ -90,6 +94,10 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
               </button>
             </form>
           </div>
+        </div>
+
+        <div className="mt-6">
+          <QuoteEditor kind="lead" id={lead.id} initialItems={lead.quote_items || []} />
         </div>
       </div>
     </div>

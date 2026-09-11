@@ -4,6 +4,7 @@ import { Mail, Phone, ChevronRight } from 'lucide-react';
 import AdminHeader from '@/components/admin/AdminHeader';
 import DbBanner, { LivePill } from '@/components/admin/DbBanner';
 import { listLeads, probeDatabase } from '@/lib/db';
+import { money } from '@/lib/quote';
 
 export const metadata: Metadata = { title: 'Website Leads | Admin', robots: { index: false, follow: false } };
 export const dynamic = 'force-dynamic';
@@ -46,6 +47,9 @@ export default async function LeadsPage() {
                       </p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
+                      {lead.quoted_amount != null && lead.quoted_amount > 0 && (
+                        <span className="text-[#1B2A4A] text-xs font-black">{money(lead.quoted_amount)}</span>
+                      )}
                       <p className="text-gray-400 text-xs">{new Date(lead.created_at).toLocaleString()}</p>
                       <ChevronRight className="w-4 h-4 text-gray-300" />
                     </div>

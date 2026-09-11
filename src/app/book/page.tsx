@@ -16,6 +16,7 @@ interface BookingData {
   name: string;
   email: string;
   phone: string;
+  website: string;
 }
 
 const times = [
@@ -28,7 +29,7 @@ export default function BookPage() {
   const [submitted, setSubmitted] = useState(false);
   const [data, setData] = useState<BookingData>({
     service: '', description: '', date: '', time: '',
-    address: '', name: '', email: '', phone: '',
+    address: '', name: '', email: '', phone: '', website: '',
   });
 
   const update = (key: keyof BookingData, value: string) =>
@@ -131,7 +132,19 @@ export default function BookPage() {
           ))}
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="relative">
+          <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+            <label>
+              Website
+              <input
+                tabIndex={-1}
+                autoComplete="off"
+                name="website"
+                value={data.website}
+                onChange={(e) => update('website', e.target.value)}
+              />
+            </label>
+          </div>
           <div className="border border-line bg-cream p-6 sm:p-8">
             {step === 1 && (
               <div>

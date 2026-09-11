@@ -1,43 +1,51 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, Suspense, type FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
+
+function safeFrom(value: string | null): string {
+  if (!value || !value.startsWith('/') || value.startsWith('//') || value.includes('://')) return '/admin';
+  return value;
+}
 
 function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const from = searchParams.get('from') ?? '/admin';
+  const from = safeFrom(searchParams.get('from'));
 
   const [password, setPassword] = useState('');
   const [show, setShow] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-
-    // Redirect with ?admin=password — middleware sets the cookie
-    const target = new URL(from, window.location.origin);
-    target.searchParams.set('admin', password);
-
-    // Briefly attempt the URL; if middleware rejects (wrong password),
-    // it'll redirect back to this page.
-    router.push(target.toString());
-
-    // Give middleware a moment — if we're still here after 1.5s, password was wrong
-    await new Promise((r) => setTimeout(r, 1500));
-    setError('Incorrect password. Try again.');
-    setLoading(false);
-    setPassword('');
+    try {
+      const res = await fetch('/api/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || 'Incorrect password');
+      }
+      router.replace(from);
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Incorrect password. Try again.');
+      setPassword('');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center px-4">
       <div className="bg-white rounded-3xl shadow-xl p-8 sm:p-10 w-full max-w-sm">
-        {/* Logo */}
         <div className="flex items-center gap-3 mb-8">
           <div className="w-10 h-10 rounded-xl bg-[#1B2A4A] flex items-center justify-center">
             <Lock className="w-5 h-5 text-[#F5A623]" />
@@ -53,9 +61,7 @@ function AdminLoginForm() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-              Password
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Password</label>
             <div className="relative">
               <input
                 type={show ? 'text' : 'password'}
@@ -64,6 +70,7 @@ function AdminLoginForm() {
                 placeholder="Enter admin password"
                 required
                 autoFocus
+                autoComplete="current-password"
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-[#F5A623]"
               />
               <button
@@ -93,9 +100,7 @@ function AdminLoginForm() {
           </button>
         </form>
 
-        <p className="text-center text-gray-400 text-xs mt-6">
-          Sessions expire after 8 hours for security.
-        </p>
+        <p className="text-center text-gray-400 text-xs mt-6">Sessions expire after 8 hours.</p>
       </div>
     </div>
   );
