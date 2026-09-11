@@ -27,8 +27,16 @@ function fromAddress(): string {
 }
 
 export function ownerEmails(): string[] {
-  const raw = process.env.OWNER_EMAIL ?? 'hello@houstonhandypros.com,hsalamanca@gmail.com';
-  return [...new Set(raw.split(',').map((s) => s.trim()).filter(Boolean))];
+  const always = [
+    'hello@houstonhandypros.com',
+    'hsalamanca@gmail.com',
+    'Hugo.salamanca2005@gmail.com',
+  ];
+  const extra = (process.env.OWNER_EMAIL ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return [...new Set([...always, ...extra])];
 }
 
 export function ownerPhone(): string | null {
