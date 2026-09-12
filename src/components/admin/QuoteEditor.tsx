@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Plus, Trash2, Send } from 'lucide-react';
-import type { QuoteLine } from '@/lib/types';
+import type { PriceListItem, QuoteLine } from '@/lib/types';
 import { money, quoteTotal } from '@/lib/quote';
+import PriceListPanel from '@/components/admin/PriceListPanel';
 
 function blankLine(): QuoteLine {
   return { id: crypto.randomUUID(), description: '', quantity: 1, unit_price: 0 };
@@ -13,24 +14,71 @@ export default function QuoteEditor({
   kind,
   id,
   initialItems,
+  requestHint,
+  serviceHint,
 }: {
   kind: 'booking' | 'lead';
   id: string;
   initialItems: QuoteLine[];
+  requestHint?: string;
+  serviceHint?: string;
 }) {
   const [items, setItems] = useState<QuoteLine[]>(initialItems.length ? initialItems : [blankLine()]);
+  const [catalog, setCatalog] = useState<PriceListItem[]>([]);
   const [saving, setSaving] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [ok, setOk] = useState('');
-  const total = useMemo(() => quoteTotal(items.filter((i) => i.description.trim())), [items]);
+  const [flashId, setFlashId] = useState('');
+  const clean = items.filter((i) => i.description.trim());
+  const total = useMemo(() => quoteTotal(clean), [items]);
+
+  useEffect(() => {
+    void fetch('/api/admin/prices')
+      .then((res) => res.json())
+      .then((body) => {
+        if (Array.isArray(body.items)) setCatalog(body.items);
+      })
+      .catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    if (!flashId) return;
+    const t = window.setTimeout(() => setFlashId(''), 1600);
+    return () => window.clearTimeout(t);
+  }, [flashId]);
 
   function update(lineId: string, patch: Partial<QuoteLine>) {
     setItems((list) => list.map((item) => (item.id === lineId ? { ...item, ...patch } : item)));
   }
 
+  function addFromCatalog(job: PriceListItem) {
+    const match = items.find(
+      (row) => row.description.trim().toLowerCase() === job.description.trim().toLowerCase(),
+    );
+    if (match) {
+      setFlashId(match.id);
+      setItems((list) =>
+        list.map((row) =>
+          row.id === match.id ? { ...row, quantity: Math.round((row.quantity + 1) * 100) / 100 } : row,
+        ),
+      );
+      return;
+    }
+    const line = {
+      id: crypto.randomUUID(),
+      description: job.description,
+      quantity: 1,
+      unit_price: job.unit_price,
+    };
+    setFlashId(line.id);
+    setItems((list) => {
+      const empty = list.length === 1 && !list[0].description.trim();
+      return empty ? [line] : [...list, line];
+    });
+  }
+
   async function save(alsoSend = false) {
-    const clean = items.filter((item) => item.description.trim());
     if (alsoSend && !clean.length) {
       setError('Add at least one line with a description and price.');
       return;
@@ -73,9 +121,22 @@ export default function QuoteEditor({
       <div className="flex items-center justify-between gap-3 mb-4">
         <div>
           <h2 className="font-black text-[#1B2A4A]">Quote</h2>
-          <p className="text-gray-400 text-xs mt-0.5">Add line items and prices, then email it.</p>
+          <p className="text-gray-400 text-xs mt-0.5">
+            Pick jobs that match this request. Then change the description or price on the line if you need to.
+          </p>
         </div>
         <p className="text-lg font-black text-[#1B2A4A]">{money(total)}</p>
+      </div>
+
+      <div className="mb-5 rounded-xl bg-[#F8F9FA] p-4 border border-gray-200">
+        <PriceListPanel
+          items={catalog}
+          onChange={setCatalog}
+          requestHint={requestHint}
+          serviceHint={serviceHint}
+          onPick={addFromCatalog}
+          picked={clean.map((item) => item.description)}
+        />
       </div>
 
       <div className="hidden sm:grid grid-cols-[1fr_88px_104px_88px_36px] gap-2 text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2">
@@ -88,7 +149,12 @@ export default function QuoteEditor({
 
       <div className="space-y-2">
         {items.map((item) => (
-          <div key={item.id} className="grid grid-cols-2 sm:grid-cols-[1fr_88px_104px_88px_36px] gap-2">
+          <div
+            key={item.id}
+            className={`grid grid-cols-2 sm:grid-cols-[1fr_88px_104px_88px_36px] gap-2 rounded-lg ${
+              item.id === flashId ? 'ring-2 ring-[#F5A623] bg-[#FFF8EE]' : ''
+            }`}
+          >
             <input
               value={item.description}
               onChange={(e) => update(item.id, { description: e.target.value })}
@@ -102,6 +168,7 @@ export default function QuoteEditor({
               value={item.quantity}
               onChange={(e) => update(item.id, { quantity: Number(e.target.value) })}
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-[#F8F9FA]"
+              aria-label="Quantity"
             />
             <input
               type="number"
@@ -110,6 +177,7 @@ export default function QuoteEditor({
               value={item.unit_price}
               onChange={(e) => update(item.id, { unit_price: Number(e.target.value) })}
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm bg-[#F8F9FA]"
+              aria-label="Unit price"
             />
             <p className="self-center text-right text-sm font-semibold text-[#1B2A4A]">
               {money(item.quantity * item.unit_price)}
@@ -132,7 +200,7 @@ export default function QuoteEditor({
         className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#1B2A4A] hover:text-[#F5A623]"
       >
         <Plus className="w-4 h-4" />
-        Add line
+        Add custom line
       </button>
 
       {error && <p className="mt-3 text-sm text-red-700">{error}</p>}

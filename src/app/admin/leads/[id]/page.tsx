@@ -97,7 +97,13 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
         </div>
 
         <div className="mt-6">
-          <QuoteEditor kind="lead" id={lead.id} initialItems={lead.quote_items || []} />
+          <QuoteEditor
+            kind="lead"
+            id={lead.id}
+            initialItems={lead.quote_items || []}
+            requestHint={lead.message}
+            serviceHint={lead.service || ''}
+          />
         </div>
       </div>
     </div>

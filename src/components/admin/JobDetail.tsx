@@ -156,7 +156,13 @@ export default function JobDetail({ initial }: { initial: Booking }) {
           </button>
         </form>
 
-        <QuoteEditor kind="booking" id={job.id} initialItems={job.quote_items || []} />
+        <QuoteEditor
+          kind="booking"
+          id={job.id}
+          initialItems={job.quote_items || []}
+          requestHint={job.description || ''}
+          serviceHint={job.service}
+        />
       </div>
 
       <aside className="space-y-4">

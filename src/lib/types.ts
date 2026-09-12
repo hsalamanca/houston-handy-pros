@@ -7,6 +7,14 @@ export type QuoteLine = {
   unit_price: number;
 };
 
+export type PriceListItem = {
+  id: string;
+  description: string;
+  unit_price: number;
+  category: string;
+  sort_order: number;
+};
+
 export type Booking = {
   id: string;
   service: string;

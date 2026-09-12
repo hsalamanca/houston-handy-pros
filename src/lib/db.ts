@@ -1,8 +1,10 @@
 import { neon } from '@neondatabase/serverless';
-import type { Booking, BookingStatus, Customer, Lead } from '@/lib/types';
+import type { Booking, BookingStatus, Customer, Lead, PriceListItem } from '@/lib/types';
 import { parseQuoteItems, quoteTotal } from '@/lib/quote';
+import { clip } from '@/lib/html';
+import { mapPriceItem } from '@/lib/price-list';
 
-export type { Booking, BookingStatus, Customer, Lead };
+export type { Booking, BookingStatus, Customer, Lead, PriceListItem };
 
 export function databaseUrl(): string | undefined {
   return (
@@ -43,6 +45,44 @@ async function ensureSchema(): Promise<void> {
   }
   return schemaReady;
 }
+
+const PRICE_SEED: Array<[string, string, number, string, number]> = [
+  ['pl_faucet', 'Faucet replacement', 175, 'Plumbing', 10],
+  ['pl_toilet', 'Toilet repair or replacement', 285, 'Plumbing', 20],
+  ['pl_drain', 'Drain clearing', 145, 'Plumbing', 30],
+  ['pl_leak', 'Leak detection and repair', 195, 'Plumbing', 40],
+  ['pl_shutoff', 'Shut-off valve replacement', 165, 'Plumbing', 50],
+  ['el_outlet', 'Outlet / switch replacement', 120, 'Electrical', 10],
+  ['el_fan', 'Ceiling fan installation', 175, 'Electrical', 20],
+  ['el_light', 'Light fixture installation', 85, 'Electrical', 30],
+  ['el_gfci', 'GFCI outlet installation', 145, 'Electrical', 40],
+  ['el_doorbell', 'Doorbell / smart switch', 125, 'Electrical', 50],
+  ['ca_door', 'Interior door replacement', 320, 'Carpentry', 10],
+  ['ca_cabinet', 'Cabinet repair', 185, 'Carpentry', 20],
+  ['ca_trim', 'Crown molding / trim (per 10 ft)', 240, 'Carpentry', 30],
+  ['ca_shelf', 'Custom shelving / built-in', 195, 'Carpentry', 40],
+  ['dw_patch', 'Drywall patch (under 4 sq ft)', 225, 'Drywall', 10],
+  ['dw_texture', 'Texture matching', 95, 'Drywall', 20],
+  ['dw_paint', 'Interior paint (small room)', 350, 'Drywall', 30],
+  ['dw_caulk', 'Bathroom / kitchen caulking', 145, 'Drywall', 40],
+  ['fl_tile', 'Tile repair', 220, 'Flooring', 10],
+  ['fl_lvp', 'LVP plank replacement', 165, 'Flooring', 20],
+  ['fl_sub', 'Subfloor repair', 240, 'Flooring', 30],
+  ['fe_board', 'Fence board replacement (each)', 65, 'Fence & Gate', 10],
+  ['fe_post', 'Fence post replacement', 185, 'Fence & Gate', 20],
+  ['fe_gate', 'Gate alignment and hardware', 220, 'Fence & Gate', 30],
+  ['tv_mount', 'TV mounting (standard, drywall)', 185, 'TV & Smart Home', 10],
+  ['tv_cords', 'In-wall cord concealment', 95, 'TV & Smart Home', 20],
+  ['tv_camera', 'Doorbell camera install', 105, 'TV & Smart Home', 30],
+  ['as_ikea', 'Furniture assembly', 120, 'Assembly', 10],
+  ['as_bed', 'Bed frame assembly', 95, 'Assembly', 20],
+  ['pw_drive', 'Driveway / sidewalk wash', 175, 'Pressure Washing', 10],
+  ['pw_house', 'House exterior wash', 280, 'Pressure Washing', 20],
+  ['mn_weather', 'Weatherstripping (per door)', 120, 'Maintenance', 10],
+  ['mn_gutter', 'Gutter cleaning', 165, 'Maintenance', 20],
+  ['mn_filter', 'AC filter replacement', 45, 'Maintenance', 30],
+  ['mn_trip', 'Trip / diagnostic fee (credited if booked)', 49, 'General', 10],
+];
 
 async function applySchema(): Promise<void> {
   const q = sql();
@@ -101,6 +141,24 @@ async function applySchema(): Promise<void> {
   await q`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS quote_items jsonb NOT NULL DEFAULT '[]'::jsonb`;
   await q`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS quote_items jsonb NOT NULL DEFAULT '[]'::jsonb`;
   await q`ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS quoted_amount numeric(10,2)`;
+  await q`
+    CREATE TABLE IF NOT EXISTS price_list (
+      id          text PRIMARY KEY,
+      description text NOT NULL,
+      unit_price  numeric(10,2) NOT NULL,
+      category    text NOT NULL DEFAULT 'General',
+      sort_order  integer NOT NULL DEFAULT 0,
+      updated_at  timestamptz NOT NULL DEFAULT now()
+    )
+  `;
+  await q`CREATE INDEX IF NOT EXISTS price_list_sort_idx ON price_list (sort_order, description)`;
+  for (const [id, description, unit_price, category, sort_order] of PRICE_SEED) {
+    await q`
+      INSERT INTO price_list (id, description, unit_price, category, sort_order)
+      VALUES (${id}, ${description}, ${unit_price}, ${category}, ${sort_order})
+      ON CONFLICT (id) DO NOTHING
+    `;
+  }
 }
 
 function asBooking(row: Record<string, unknown>): Booking {
@@ -149,8 +207,8 @@ function asCustomer(row: Record<string, unknown>): Customer {
     phone: row.phone == null ? null : String(row.phone),
     address: row.address == null ? null : String(row.address),
     neighborhood: row.neighborhood == null ? null : String(row.neighborhood),
-    maintenance_plan: row.maintenance_plan == null ? null : String(row.maintenance_plan),
     notes: row.notes == null ? null : String(row.notes),
+    maintenance_plan: row.maintenance_plan == null ? null : String(row.maintenance_plan),
     created_at: String(row.created_at ?? ''),
   };
 }
@@ -176,6 +234,12 @@ export async function probeDatabase(): Promise<{ ok: boolean; message: string }>
   }
 }
 
+export async function listBookings(): Promise<Booking[]> {
+  await ensureSchema();
+  const rows = await sql()`SELECT * FROM bookings ORDER BY created_at DESC LIMIT 500`;
+  return (rows as Record<string, unknown>[]).map(asBooking);
+}
+
 export async function getBooking(id: string): Promise<Booking | null> {
   await ensureSchema();
   try {
@@ -187,6 +251,12 @@ export async function getBooking(id: string): Promise<Booking | null> {
   }
 }
 
+export async function listLeads(): Promise<Lead[]> {
+  await ensureSchema();
+  const rows = await sql()`SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 500`;
+  return (rows as Record<string, unknown>[]).map(asLead);
+}
+
 export async function getLead(id: string): Promise<Lead | null> {
   await ensureSchema();
   try {
@@ -196,18 +266,6 @@ export async function getLead(id: string): Promise<Lead | null> {
   } catch {
     return null;
   }
-}
-
-export async function listBookings(): Promise<Booking[]> {
-  await ensureSchema();
-  const rows = await sql()`SELECT * FROM bookings ORDER BY created_at DESC LIMIT 500`;
-  return (rows as Record<string, unknown>[]).map(asBooking);
-}
-
-export async function listLeads(): Promise<Lead[]> {
-  await ensureSchema();
-  const rows = await sql()`SELECT * FROM contact_messages ORDER BY created_at DESC LIMIT 500`;
-  return (rows as Record<string, unknown>[]).map(asLead);
 }
 
 export async function listCustomers(): Promise<Customer[]> {
@@ -226,14 +284,15 @@ export async function insertBooking(input: {
   customer_email: string;
   customer_phone: string;
   is_emergency: boolean;
-  source: string;
+  source?: string;
 }): Promise<Booking> {
   await ensureSchema();
   const rows = await sql()`
     INSERT INTO bookings (
       service, description, preferred_date, preferred_time, address,
       customer_name, customer_email, customer_phone, is_emergency, source, status
-    ) VALUES (
+    )
+    VALUES (
       ${input.service},
       ${input.description || null},
       ${input.preferred_date || null},
@@ -243,7 +302,7 @@ export async function insertBooking(input: {
       ${input.customer_email},
       ${input.customer_phone || null},
       ${input.is_emergency},
-      ${input.source},
+      ${input.source || 'book'},
       'new'
     )
     RETURNING *
@@ -342,4 +401,72 @@ export async function updateLead(
   const row = (rows as Record<string, unknown>[])[0];
   if (!row?.id) throw new DbError('Lead not found', 404);
   return asLead(row);
+}
+
+export async function listPriceList(): Promise<PriceListItem[]> {
+  await ensureSchema();
+  const rows = await sql()`SELECT * FROM price_list ORDER BY category, sort_order, description`;
+  return (rows as Record<string, unknown>[]).map(mapPriceItem);
+}
+
+export async function savePriceItem(item: {
+  id?: string;
+  description: string;
+  unit_price: number;
+  category: string;
+  sort_order?: number;
+}): Promise<PriceListItem> {
+  await ensureSchema();
+  const description = clip(item.description, 200);
+  if (!description) throw new DbError('Description is required.', 400);
+  const id = clip(item.id, 80) || `pl_${crypto.randomUUID().replace(/-/g, '').slice(0, 12)}`;
+  const category = clip(item.category, 80) || 'General';
+  const price = Math.round(Number(item.unit_price) * 100) / 100;
+  const sort = item.sort_order ?? 999;
+  const rows = await sql()`
+    INSERT INTO price_list (id, description, unit_price, category, sort_order, updated_at)
+    VALUES (${id}, ${description}, ${price}, ${category}, ${sort}, now())
+    ON CONFLICT (id) DO UPDATE SET
+      description = EXCLUDED.description,
+      unit_price = EXCLUDED.unit_price,
+      category = EXCLUDED.category,
+      sort_order = EXCLUDED.sort_order,
+      updated_at = now()
+    RETURNING *
+  `;
+  return mapPriceItem((rows as Record<string, unknown>[])[0]);
+}
+
+export async function savePriceList(
+  items: Array<{
+    id?: string;
+    description: string;
+    unit_price: number;
+    category: string;
+    sort_order?: number;
+  }>,
+): Promise<PriceListItem[]> {
+  await ensureSchema();
+  const keep = new Set<string>();
+  let order = 0;
+  for (const item of items) {
+    const description = clip(item.description, 200);
+    if (!description) continue;
+    const saved = await savePriceItem({
+      id: item.id,
+      description,
+      unit_price: item.unit_price,
+      category: item.category,
+      sort_order: item.sort_order ?? order,
+    });
+    keep.add(saved.id);
+    order += 10;
+  }
+  const existing = await sql()`SELECT id FROM price_list`;
+  for (const row of existing as { id: string }[]) {
+    if (!keep.has(row.id)) {
+      await sql()`DELETE FROM price_list WHERE id = ${row.id}`;
+    }
+  }
+  return listPriceList();
 }

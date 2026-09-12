@@ -5,6 +5,7 @@ const links = [
   { href: '/admin/jobs', label: 'Jobs' },
   { href: '/admin/leads', label: 'Leads' },
   { href: '/admin/customers', label: 'Customers' },
+  { href: '/admin/prices', label: 'Prices' },
 ];
 
 export default function AdminHeader({ current }: { current: string }) {
